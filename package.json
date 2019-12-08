@@ -1,0 +1,29 @@
+{
+  "name": "media-utils",
+  "version": "0.0.9",
+  "description": "Utilities for dealing with media files",
+  "main": "./lib/index.js",
+  "scripts": {
+    "build": "babelify",
+    "test": "jest",
+    "prepare": "yarn run build"
+  },
+  "repository": "https://github.com/kevinfrei/media-utils.git",
+  "author": "Kevin Frei (kevinfrei@hotmail.com)",
+  "license": "MIT",
+  "dependencies": {
+    "my-node-utils": "file:../node-freik-utils",
+    "my-utils": "file:../js-freik-utils"
+  },
+  "devDependencies": {
+    "build-tools": "file:../build-tools",
+    "flow-bin": "^0.112.0",
+    "jest": "^24.9.0",
+    "jest-extended": "^0.11.2"
+  },
+  "jest": {
+    "setupFilesAfterEnv": [
+      "jest-extended"
+    ]
+  }
+}

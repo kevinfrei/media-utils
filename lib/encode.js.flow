@@ -1,0 +1,35 @@
+// @flow
+// @format
+'use strict'; // Module:
+// media/encode
+// Provides wav file to compressed audio file tools
+// Everything is synchronous currently
+
+const {
+  ProcUtil
+} = require('my-node-utils');
+
+const {
+  ObjUtil
+} = require('my-utils');
+
+import type { encoder, encoderAsync } from './index';
+declare var makeM4aArgs: (wavFile: any, outputFilename: any, options: any, attrs: any) => Array<string>;
+declare var m4a: (wavFile: any, outputFilename: any, options: any, attrs: any) => any;
+declare var m4aAsync: (wavFile: any, outputFilename: any, options: any, attrs: any) => any;
+declare var makeFfmpegArgs: (inputFile: any, outputFilename: any, options: any, attrs: any) => Array<string>;
+declare var ffmpeg: (inputFile: any, outputFilename: any, options: any, attrs: any) => any;
+declare var ffmpegAsync: (inputFile: any, outputFilename: any, options: any, attrs: any) => any;
+declare var makeFlacArgs: (wavFile: any, outputFilename: any, options: any, attrs: any) => Array<string>;
+declare var flac: (wavFile: any, outputFilename: any, options: any, attrs: any) => any;
+declare var flacAsync: (wavFile: any, outputFilename: any, options: any, attrs: any) => any;
+module.exports = {
+  aac: m4a,
+  aacAsync: m4aAsync,
+  m4a,
+  m4aAsync,
+  flac,
+  flacAsync,
+  ffmpeg,
+  ffmpegAsync
+};
