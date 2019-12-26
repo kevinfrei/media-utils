@@ -1,4 +1,3 @@
-// @flow
 // @format
 
 const { Metadata } = require('./../../lib/index');

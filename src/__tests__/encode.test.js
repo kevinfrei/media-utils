@@ -1,4 +1,3 @@
-// @flow
 // @format
 const ofs = require('fs');
 const util = require('util');
