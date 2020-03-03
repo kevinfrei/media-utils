@@ -11,7 +11,7 @@ const Metadata = require('./metadata'); // This is a helper type used in a few p
 
 export type attributes = {
   [key: string]: string
-}; // This is the most simplistic strongly typed metadatat you'll find
+}; // This is the most simplistic strongly typed metadata you'll find
 
 export type SimpleMetadata = {
   artist: string,
