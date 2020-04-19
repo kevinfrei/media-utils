@@ -15,14 +15,14 @@ import type {
   attributes,
   regexPattern,
   mdAcquire,
-  mdAcquireAsync
+  mdAcquireAsync,
 } from './index';
 
 import type { spawnResult } from 'my-node-utils';
 
 const cp = {
   spawnAsync: ProcUtil.spawnAsync,
-  ...ocp
+  ...ocp,
 };
 
 let cwd: string = process.cwd();
@@ -35,31 +35,31 @@ let patterns: Array<regexPattern> = [
   {
     compilation: 'va',
     rgx: /^(?:.*\/)?(?:(?:va(?:rious artists)?)) - (\d+) - ([^\/]+)\/(\d+)(?: ?[-\.])? ([^\/]+) - ([^\/]+)$/i,
-    metadata: { year: 1, album: 2, track: 3, artist: 4, title: 5 }
+    metadata: { year: 1, album: 2, track: 3, artist: 4, title: 5 },
   },
   {
     compilation: 'va',
     rgx: /^(?:.*\/)?(?:(?:va(?:various artists)?)) - ([^\/]+)\/(\d+)(?: ?[-\.])? ([^\/]+) - ([^\/]+)$/i,
-    metadata: { album: 1, track: 2, artist: 3, title: 4 }
+    metadata: { album: 1, track: 2, artist: 3, title: 4 },
   },
   {
     compilation: 'ost',
     rgx: /^(?:.*\/)?(?:(?:ost)|(?:soundtrack)) - (\d+) - ([^\/]+)\/(\d+)(?: ?[-\.])? ([^\/]+) - ([^\/]+)$/i,
-    metadata: { year: 1, album: 2, track: 3, artist: 4, title: 5 }
+    metadata: { year: 1, album: 2, track: 3, artist: 4, title: 5 },
   },
   {
     compilation: 'ost',
     rgx: /^(?:.*\/)?(?:(?:ost)|(?:soundtrack)) - ([^\/]+)\/(\d+)(?: [-\.])? ([^\/]+) - ([^\/]+)$/i,
-    metadata: { album: 1, track: 2, artist: 3, title: 4 }
+    metadata: { album: 1, track: 2, artist: 3, title: 4 },
   },
   {
     rgx: /^(?:.*\/)?([^\/]+) - (\d+) - ([^\/]+)\/(\d+)(?: ?[-\.])? ([^\/]+)$/i,
-    metadata: { artist: 1, year: 2, album: 3, track: 4, title: 5 }
+    metadata: { artist: 1, year: 2, album: 3, track: 4, title: 5 },
   },
   {
     rgx: /^(?:.*\/)?([^\/]+) - ([^\/]+)\/(\d+)(?: ?[-\.])? ([^\/]+)$/i,
-    metadata: { artist: 1, album: 2, track: 3, title: 4 }
-  }
+    metadata: { artist: 1, album: 2, track: 3, title: 4 },
+  },
 ];
 
 const moreArtistsRE: RegExp = /\[(?:(?:w-)|(?:feat-)|(?:with)|(?:featuring)) (.*)\]/i;
@@ -73,13 +73,15 @@ const getArtists = (artists: string): Array<string> => {
 
 // This should pull the [w- Someone & Somebody else] from the title, and
 // stick it in the artists array
-const pullArtistsFromTitle = (title: string): { title: string, artists: Array<string> } => {
+const pullArtistsFromTitle = (
+  title: string
+): { title: string, artists: Array<string> } => {
   const match = title.match(moreArtistsRE);
   if (!match) {
     return { title, artists: [] };
-  };
+  }
   const artists = getArtists(match[1]);
-  title = title.replace(moreArtistsRE, "").trim();
+  title = title.replace(moreArtistsRE, '').trim();
   return { title, artists };
 };
 
@@ -99,7 +101,10 @@ const fromPath: mdAcquire = (pathname): ?Object => {
   pathname = pathname.replace(/\\/g, '/');
 
   // A little helper
-  const makeMetaDataFromRegex = (pathname: string, pattern: regexPattern): ?{ [key: string]: string } => {
+  const makeMetaDataFromRegex = (
+    pathname: string,
+    pattern: regexPattern
+  ): ?{ [key: string]: string } => {
     if (!pattern.rgx.test(pathname)) {
       return;
     }
@@ -109,20 +114,19 @@ const fromPath: mdAcquire = (pathname): ?Object => {
     }
     let result: { [key: string]: string } = {};
     // Comment syntax because otherwise it confuses syntax highlighting :/
-    for (let attr/*: string*/ in pattern.metadata) {
+    for (let attr /*: string*/ in pattern.metadata) {
       if (pattern.metadata.hasOwnProperty(attr)) {
         let index = pattern.metadata[attr];
         result[attr] = match[index];
       }
     }
-    if (typeof (pattern.compilation) === 'string') {
+    if (typeof pattern.compilation === 'string') {
       result.compilation = pattern.compilation;
     } else if (pattern.compilation === true) {
       result.compilation = 'va';
     }
     return result;
   };
-
 
   let theExtension: ?string = path.extname(pathname);
   if (!theExtension || theExtension.length < 3) {
@@ -132,8 +136,11 @@ const fromPath: mdAcquire = (pathname): ?Object => {
     theExtension = theExtension.substr(1);
   }
   pathname = pathname.substr(0, pathname.length - 1 - theExtension.length);
-  for (let pattern/*: regexPattern*/ of patterns) {
-    let result: ?{ [key: string]: string } = makeMetaDataFromRegex(pathname, pattern);
+  for (let pattern /*: regexPattern*/ of patterns) {
+    let result: ?{ [key: string]: string } = makeMetaDataFromRegex(
+      pathname,
+      pattern
+    );
     if (result) {
       return result;
     }
@@ -143,17 +150,19 @@ const fromPath: mdAcquire = (pathname): ?Object => {
 const fromFileArgs = (pathname: string): Array<string> => [
   ObjUtil.deQuote(
     '--Output=General;{"artist":"%Performer%",' +
-    '"albumArtist":"%Album/Performer%",' +
-    '"compilation":"%Compilation%",' +
-    '"year":"%Recorded_Date%",' +
-    '"album":"%Album%",' +
-    '"track":"%Track/Position%",' +
-    '"title":"%Title%"}'
+      '"albumArtist":"%Album/Performer%",' +
+      '"compilation":"%Compilation%",' +
+      '"year":"%Recorded_Date%",' +
+      '"album":"%Album%",' +
+      '"track":"%Track/Position%",' +
+      '"title":"%Title%"}'
   ),
-  pathname
+  pathname,
 ];
 
-const fromFileFinish = (res: spawnResult | child_process$spawnSyncRet): ?SimpleMetadata => {
+const fromFileFinish = (
+  res: spawnResult | child_process$spawnSyncRet
+): ?SimpleMetadata => {
   if (res.error || res.status || res.stdout.length < 20) {
     return;
   }
@@ -163,14 +172,21 @@ const fromFileFinish = (res: spawnResult | child_process$spawnSyncRet): ?SimpleM
   let metadata: { [key: string]: string } = ObjUtil.reQuote(readyForParsing);
 
   // Requirements: Album, Artist, Track, Title
-  if (!metadata.title || !metadata.track || !metadata.artist || !metadata.album) {
+  if (
+    !metadata.title ||
+    !metadata.track ||
+    !metadata.artist ||
+    !metadata.album
+  ) {
     return;
   }
   let title = metadata.title.trim();
   let track = metadata.track.trim();
   let album = metadata.album.trim();
   let artist = metadata.artist.trim();
-  let comp: ?string = metadata.compilation ? metadata.compilation.trim() : undefined;
+  let comp: ?string = metadata.compilation
+    ? metadata.compilation.trim()
+    : undefined;
   let year: ?string = metadata.year ? metadata.year.trim() : undefined;
 
   // There's some weirdnes WRT %Performer% sometimes...
@@ -191,12 +207,16 @@ const fromFileFinish = (res: spawnResult | child_process$spawnSyncRet): ?SimpleM
     delete metadata.albumArtist;
   }
   let compilation: ?('va' | 'ost');
-  if ((comp && metadata.albumArtist) ||
+  if (
+    (comp && metadata.albumArtist) ||
     metadata.albumArtist === 'Various Artists' ||
-    metadata.albumArtist === 'VA') {
+    metadata.albumArtist === 'VA'
+  ) {
     compilation = 'va';
-  } else if (metadata.albumArtist === 'Soundtrack' ||
-    metadata.albumArtist === 'ost') {
+  } else if (
+    metadata.albumArtist === 'Soundtrack' ||
+    metadata.albumArtist === 'ost'
+  ) {
     compilation = 'ost';
   }
 
@@ -212,14 +232,20 @@ const fromFileFinish = (res: spawnResult | child_process$spawnSyncRet): ?SimpleM
 };
 
 const fromFileAsync: mdAcquireAsync = async (pathname: string) =>
-  fromFileFinish(await cp.spawnAsync(
-    'mediainfo', fromFileArgs(pathname), { cwd: cwd, encoding: 'utf8' }
-  ));
+  fromFileFinish(
+    await cp.spawnAsync('mediainfo', fromFileArgs(pathname), {
+      cwd: cwd,
+      encoding: 'utf8',
+    })
+  );
 
 const fromFile: mdAcquire = (pathname: string) =>
-  fromFileFinish(cp.spawnSync(
-    'mediainfo', fromFileArgs(pathname), { cwd: cwd, encoding: 'utf8' }
-  ));
+  fromFileFinish(
+    cp.spawnSync('mediainfo', fromFileArgs(pathname), {
+      cwd: cwd,
+      encoding: 'utf8',
+    })
+  );
 
 const FullFromObj = (file: string, data: attributes): ?FullMetadata => {
   let res: FullMetadata = {
@@ -227,7 +253,7 @@ const FullFromObj = (file: string, data: attributes): ?FullMetadata => {
     Artist: '',
     Album: '',
     Track: 0,
-    Title: ''
+    Title: '',
   };
   /*    Year?: 0,
     VAType?: 'va',
@@ -244,7 +270,11 @@ const FullFromObj = (file: string, data: attributes): ?FullMetadata => {
   ) {
     return;
   }
-  res.Artist = data.hasOwnProperty('albumArtist') ? data.albumArtist : data.artist;
+  let theArtist = data.hasOwnProperty('albumArtist')
+    ? data.albumArtist
+    : data.artist;
+  const artistArray = getArtists(theArtist);
+  res.Artist = (artistArray.length > 1) ? artistArray : theArtist;
   res.Album = data.album;
   res.Track = Number.parseInt(data.track);
   const { title, artists } = pullArtistsFromTitle(data.title);
@@ -281,5 +311,5 @@ module.exports = {
   fromPath,
   addPattern,
   FullFromObj,
-  setCwd
+  setCwd,
 };

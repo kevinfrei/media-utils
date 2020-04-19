@@ -1,6 +1,6 @@
 {
   "name": "media-utils",
-  "version": "0.0.9",
+  "version": "0.1.0",
   "description": "Utilities for dealing with media files",
   "main": "./lib/index.js",
   "scripts": {
@@ -17,8 +17,8 @@
   },
   "devDependencies": {
     "build-tools": "file:../build-tools",
-    "flow-bin": "^0.122.0",
-    "jest": "^25.2.7",
+    "flow-bin": "^0.123.0",
+    "jest": "^25.3.0",
     "jest-extended": "^0.11.5"
   },
   "jest": {

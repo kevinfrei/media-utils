@@ -23,7 +23,7 @@ export type SimpleMetadata = {
 // among other scenarios, situations where you're moving files around
 export type FullMetadata = {
   OriginalPath: string,
-  Artist: string,
+  Artist: Array<string> | string,
   Album: string,
   Year?: number,
   Track: number,

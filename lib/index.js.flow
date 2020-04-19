@@ -25,7 +25,7 @@ export type SimpleMetadata = {
 
 export type FullMetadata = {
   OriginalPath: string,
-  Artist: string,
+  Artist: Array<string> | string,
   Album: string,
   Year?: number,
   Track: number,
