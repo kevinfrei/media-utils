@@ -1,5 +1,5 @@
 {
-  "name": "media-utils",
+  "name": "@freik/media-utils",
   "version": "0.2.1",
   "description": "Utilities for dealing with media files",
   "main": "./lib/index.js",
