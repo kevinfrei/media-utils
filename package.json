@@ -1,8 +1,9 @@
 {
   "name": "@freik/media-utils",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "description": "Utilities for dealing with media files",
   "main": "./lib/index.js",
+  "types": "./lib/index.d.ts",
   "scripts": {
     "test": "jest --config jestconfig.json",
     "build": "rimraf lib && tsc",
