@@ -8,7 +8,7 @@
 // Everything is synchronous currently
 
 const path = require('path');
-const { ProcUtil, PathUtil } = require('my-node-utils');
+const { ProcUtil, PathUtil } = require('@freik/node-utils');
 
 import type { decoder, decoderAsync } from './index';
 

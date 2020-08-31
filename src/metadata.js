@@ -6,8 +6,8 @@ const path = require('path');
 const ocp = require('child_process');
 const util = require('util');
 
-const { ObjUtil } = require('my-utils');
-const { ProcUtil } = require('my-node-utils');
+const { ObjUtil } = require('@freik/core-utils');
+const { ProcUtil } = require('@freik/node-utils');
 
 import type {
   SimpleMetadata,
@@ -18,7 +18,7 @@ import type {
   mdAcquireAsync,
 } from './index';
 
-import type { spawnResult } from 'my-node-utils';
+import type { spawnResult } from '@freik/node-utils';
 
 const cp = {
   spawnAsync: ProcUtil.spawnAsync,
