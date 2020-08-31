@@ -1,19 +1,20 @@
-// @flow
-// @format
-'use strict';
-
 // Module:
 // media/encode
 // Provides wav file to compressed audio file tools
 // Everything is synchronous currently
 
-const { ProcUtil } = require('@freik/node-utils');
-const { ObjUtil } = require('@freik/core-utils');
+import { ProcUtil } from '@freik/node-utils';
+import { ObjUtil } from '@freik/core-utils';
 
-import type { encoder, encoderAsync } from './index';
+import type { attributes, encoder, encoderAsync } from './index';
 
-const makeM4aArgs = (wavFile, outputFilename, options, attrs): Array<string> => {
-  let args: Array<string> = ['-w', '-o', outputFilename];
+const makeM4aArgs = (
+  wavFile: string,
+  outputFilename: string,
+  options?: attributes,
+  attrs?: attributes,
+): string[] => {
+  let args: string[] = ['-w', '-o', outputFilename];
   if (options) {
     args = args.concat(ObjUtil.prefixObj('-', options));
   }
@@ -22,25 +23,36 @@ const makeM4aArgs = (wavFile, outputFilename, options, attrs): Array<string> => 
   }
   args.push(wavFile);
   return args;
-}
+};
 
 const m4a: encoder = (wavFile, outputFilename, options, attrs) => {
   const args = makeM4aArgs(wavFile, outputFilename, options, attrs);
-  return ProcUtil.spawnRes('faac', args, { encoding: 'utf8' });
+  return ProcUtil.spawnRes('faac', args);
 };
 
-const m4aAsync: encoderAsync = async (wavFile, outputFilename, options, attrs) => {
+const m4aAsync: encoderAsync = async (
+  wavFile,
+  outputFilename,
+  options,
+  attrs,
+) => {
   const args = makeM4aArgs(wavFile, outputFilename, options, attrs);
-  return await ProcUtil.spawnResAsync('faac', args, { encoding: 'utf8' });
+  return await ProcUtil.spawnResAsync('faac', args);
 };
 
-const makeFfmpegArgs = (inputFile, outputFilename, options, attrs): Array<string> => {
-  let args: Array<string> = ['-i', inputFile, '-vn'];//, '-c:a', 'aac', '-cutoff', '16000' ];
+const makeFfmpegArgs = (
+  inputFile: string,
+  outputFilename: string,
+  options?: attributes,
+  attrs?: attributes,
+): string[] => {
+  // plus '-c:a', 'aac', '-cutoff', '16000'  in some world
+  let args: string[] = ['-i', inputFile, '-vn'];
   if (options) {
     args = [...args, ...ObjUtil.prefixObj('-', options)];
   }
   if (attrs) {
-    for (let elem/*: string*/ in attrs) {
+    for (const elem in attrs) {
       if (attrs.hasOwnProperty(elem)) {
         args.push('-metadata');
         args.push(elem + '=' + attrs[elem]);
@@ -49,20 +61,30 @@ const makeFfmpegArgs = (inputFile, outputFilename, options, attrs): Array<string
   }
   args.push(outputFilename);
   return args;
-}
+};
 
 const ffmpeg: encoder = (inputFile, outputFilename, options, attrs) => {
   const args = makeFfmpegArgs(inputFile, outputFilename, options, attrs);
-  return ProcUtil.spawnRes('ffmpeg', args, { encoding: 'utf8' });
+  return ProcUtil.spawnRes('ffmpeg', args);
 };
 
-const ffmpegAsync: encoderAsync = async (inputFile, outputFilename, options, attrs) => {
+const ffmpegAsync: encoderAsync = async (
+  inputFile,
+  outputFilename,
+  options,
+  attrs,
+) => {
   const args = makeFfmpegArgs(inputFile, outputFilename, options, attrs);
-  return await ProcUtil.spawnResAsync('ffmpeg', args, { encoding: 'utf8' });
+  return await ProcUtil.spawnResAsync('ffmpeg', args);
 };
 
-const makeFlacArgs = (wavFile, outputFilename, options, attrs): Array<string> => {
-  let args: Array<string> = [
+const makeFlacArgs = (
+  wavFile: string,
+  outputFilename: string,
+  options?: attributes,
+  attrs?: attributes,
+): string[] => {
+  let args: string[] = [
     '--best',
     '-m',
     '-r',
@@ -70,7 +92,7 @@ const makeFlacArgs = (wavFile, outputFilename, options, attrs): Array<string> =>
     '-e',
     '-p',
     '-o',
-    outputFilename
+    outputFilename,
   ];
   if (options) {
     args = args.concat(ObjUtil.prefixObj('-', options));
@@ -92,25 +114,30 @@ const makeFlacArgs = (wavFile, outputFilename, options, attrs): Array<string> =>
   }
   args.push(wavFile);
   return args;
-}
+};
 
 const flac: encoder = (wavFile, outputFilename, options, attrs) => {
   const args = makeFlacArgs(wavFile, outputFilename, options, attrs);
-  return ProcUtil.spawnRes('flac', args, { encoding: 'utf8' });
+  return ProcUtil.spawnRes('flac', args);
 };
 
-const flacAsync: encoderAsync = async (wavFile, outputFilename, options, attrs) => {
+const flacAsync: encoderAsync = async (
+  wavFile,
+  outputFilename,
+  options,
+  attrs,
+) => {
   const args = makeFlacArgs(wavFile, outputFilename, options, attrs);
-  return await ProcUtil.spawnResAsync('flac', args, { encoding: 'utf8' });
+  return await ProcUtil.spawnResAsync('flac', args);
 };
 
-module.exports = {
-  aac: m4a,
-  aacAsync: m4aAsync,
+export {
+  m4a as aac,
   m4a,
-  m4aAsync,
   flac,
-  flacAsync,
   ffmpeg,
-  ffmpegAsync
-}
+  m4aAsync,
+  m4aAsync as aacAsync,
+  flacAsync,
+  ffmpegAsync,
+};

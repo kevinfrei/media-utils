@@ -2,12 +2,11 @@
 // @format
 'use strict';
 
-const path = require('path');
-const ocp = require('child_process');
-const util = require('util');
+import path from 'path';
+import ocp from 'child_process';
 
-const { ObjUtil } = require('@freik/core-utils');
-const { ProcUtil } = require('@freik/node-utils');
+import { ObjUtil } from '@freik/core-utils';
+import { ProcUtil } from '@freik/node-utils';
 
 import type {
   SimpleMetadata,
@@ -22,16 +21,16 @@ import type { spawnResult } from '@freik/node-utils';
 
 const cp = {
   spawnAsync: ProcUtil.spawnAsync,
-  ...ocp,
+  spawnSync: ocp.spawnSync,
 };
 
 let cwd: string = process.cwd();
 
-const setCwd = (path: string): void => {
-  cwd = path;
-};
+export function setCwd(pathname: string) {
+  cwd = pathname;
+}
 
-let patterns: Array<regexPattern> = [
+const patterns: regexPattern[] = [
   {
     compilation: 'va',
     rgx: /^(?:.*\/)?(?:(?:va(?:rious artists)?)) - (\d+) - ([^\/]+)\/(\d+)(?: ?[-\.])? ([^\/]+) - ([^\/]+)$/i,
@@ -63,7 +62,7 @@ let patterns: Array<regexPattern> = [
 ];
 
 const moreArtistsRE: RegExp = /\[(?:(?:w-)|(?:feat-)|(?:with)|(?:featuring)) (.*)\]/i;
-const getArtists = (artists: string): Array<string> => {
+const getArtists = (artists: string): string[] => {
   if (artists.indexOf(' & ') >= 0) {
     return artists.split(', ').join(' & ').split(' & ');
   } else {
@@ -74,8 +73,8 @@ const getArtists = (artists: string): Array<string> => {
 // This should pull the [w- Someone & Somebody else] from the title, and
 // stick it in the artists array
 const pullArtistsFromTitle = (
-  title: string
-): { title: string, artists: Array<string> } => {
+  title: string,
+): { title: string; artists: string[] } => {
   const match = title.match(moreArtistsRE);
   if (!match) {
     return { title, artists: [] };
@@ -85,38 +84,38 @@ const pullArtistsFromTitle = (
   return { title, artists };
 };
 
-const addPattern = (
+export function addPattern(
   rgx: RegExp,
   metadata: { [key: string]: number },
-  compilation: ?any
-) => {
+  compilation?: any,
+) {
   if (compilation) {
     patterns.push({ rgx, metadata, compilation: true });
   } else {
     patterns.push({ rgx, metadata });
   }
-};
+}
 
-const fromPath: mdAcquire = (pathname): ?Object => {
-  pathname = pathname.replace(/\\/g, '/');
+export const fromPath: mdAcquire = (pthnm) => {
+  let pathname = pthnm.replace(/\\/g, '/');
 
   // A little helper
   const makeMetaDataFromRegex = (
-    pathname: string,
-    pattern: regexPattern
-  ): ?{ [key: string]: string } => {
-    if (!pattern.rgx.test(pathname)) {
+    pathnm: string,
+    pattern: regexPattern,
+  ): SimpleMetadata | void => {
+    if (!pattern.rgx.test(pathnm)) {
       return;
     }
-    const match = pattern.rgx.exec(pathname);
+    const match = pattern.rgx.exec(pathnm);
     if (!match) {
       return;
     }
-    let result: { [key: string]: string } = {};
+    const result: { [key: string]: string } = {};
     // Comment syntax because otherwise it confuses syntax highlighting :/
-    for (let attr /*: string*/ in pattern.metadata) {
+    for (const attr in pattern.metadata) {
       if (pattern.metadata.hasOwnProperty(attr)) {
-        let index = pattern.metadata[attr];
+        const index = pattern.metadata[attr];
         result[attr] = match[index];
       }
     }
@@ -125,10 +124,10 @@ const fromPath: mdAcquire = (pathname): ?Object => {
     } else if (pattern.compilation === true) {
       result.compilation = 'va';
     }
-    return result;
+    return (result as unknown) as SimpleMetadata;
   };
 
-  let theExtension: ?string = path.extname(pathname);
+  let theExtension: string = path.extname(pathname);
   if (!theExtension || theExtension.length < 3) {
     return;
   }
@@ -136,18 +135,15 @@ const fromPath: mdAcquire = (pathname): ?Object => {
     theExtension = theExtension.substr(1);
   }
   pathname = pathname.substr(0, pathname.length - 1 - theExtension.length);
-  for (let pattern /*: regexPattern*/ of patterns) {
-    let result: ?{ [key: string]: string } = makeMetaDataFromRegex(
-      pathname,
-      pattern
-    );
+  for (const pattern of patterns) {
+    const result = makeMetaDataFromRegex(pathname, pattern);
     if (result) {
-      return result;
+      return (result as unknown) as SimpleMetadata;
     }
   }
 };
 
-const fromFileArgs = (pathname: string): Array<string> => [
+const fromFileArgs = (pathname: string): string[] => [
   ObjUtil.deQuote(
     '--Output=General;{"artist":"%Performer%",' +
       '"albumArtist":"%Album/Performer%",' +
@@ -155,21 +151,21 @@ const fromFileArgs = (pathname: string): Array<string> => [
       '"year":"%Recorded_Date%",' +
       '"album":"%Album%",' +
       '"track":"%Track/Position%",' +
-      '"title":"%Title%"}'
+      '"title":"%Title%"}',
   ),
   pathname,
 ];
 
 const fromFileFinish = (
-  res: spawnResult | child_process$spawnSyncRet
-): ?SimpleMetadata => {
+  res: spawnResult | ocp.SpawnSyncReturns<string>,
+): SimpleMetadata | void => {
   if (res.error || res.status || res.stdout.length < 20) {
     return;
   }
 
   let readyForParsing: string = res.stdout.toString();
   readyForParsing = readyForParsing.replace(/[\x01-\x1f]/g, '');
-  let metadata: { [key: string]: string } = ObjUtil.reQuote(readyForParsing);
+  const metadata: { [key: string]: string } = ObjUtil.reQuote(readyForParsing);
 
   // Requirements: Album, Artist, Track, Title
   if (
@@ -180,21 +176,20 @@ const fromFileFinish = (
   ) {
     return;
   }
-  let title = metadata.title.trim();
-  let track = metadata.track.trim();
-  let album = metadata.album.trim();
+  const title = metadata.title.trim();
+  const track = metadata.track.trim();
+  const album = metadata.album.trim();
   let artist = metadata.artist.trim();
-  let comp: ?string = metadata.compilation
-    ? metadata.compilation.trim()
-    : undefined;
-  let year: ?string = metadata.year ? metadata.year.trim() : undefined;
+  const comp = metadata.compilation ? metadata.compilation.trim() : undefined;
+  const year = metadata.year ? metadata.year.trim() : undefined;
 
   // There's some weirdnes WRT %Performer% sometimes...
   const split = artist.split(' / ');
   if (split.length === 2 && split[0] === split[1]) {
     artist = split[0].trim();
   } else if (split.length > 1) {
-    console.log(artist);
+    // TODO: do something here, but not this:
+    // console.log(artist);
   }
 
   if (metadata.albumArtist === '') {
@@ -206,7 +201,7 @@ const fromFileFinish = (
   ) {
     delete metadata.albumArtist;
   }
-  let compilation: ?('va' | 'ost');
+  let compilation: 'va' | 'ost' | undefined;
   if (
     (comp && metadata.albumArtist) ||
     metadata.albumArtist === 'Various Artists' ||
@@ -231,24 +226,27 @@ const fromFileFinish = (
   }
 };
 
-const fromFileAsync: mdAcquireAsync = async (pathname: string) =>
+export const fromFileAsync: mdAcquireAsync = async (pathname: string) =>
   fromFileFinish(
     await cp.spawnAsync('mediainfo', fromFileArgs(pathname), {
-      cwd: cwd,
-      encoding: 'utf8',
-    })
+      cwd,
+      stdio: ['pipe', 'pipe', 'pipe'],
+    }),
   );
 
-const fromFile: mdAcquire = (pathname: string) =>
+export const fromFile: mdAcquire = (pathname: string) =>
   fromFileFinish(
     cp.spawnSync('mediainfo', fromFileArgs(pathname), {
-      cwd: cwd,
+      cwd,
       encoding: 'utf8',
-    })
+    }),
   );
 
-const FullFromObj = (file: string, data: attributes): ?FullMetadata => {
-  let res: FullMetadata = {
+export function FullFromObj(
+  file: string,
+  data: attributes,
+): FullMetadata | void {
+  const res: FullMetadata = {
     OriginalPath: file,
     Artist: '',
     Album: '',
@@ -257,8 +255,8 @@ const FullFromObj = (file: string, data: attributes): ?FullMetadata => {
   };
   /*    Year?: 0,
     VAType?: 'va',
-    MoreArtists?: Array<string>,
-    Mix?: Array<string>,
+    MoreArtists?: string[],
+    Mix?: string[],
     Disk?: number,
     DiskOf?: number
 */
@@ -270,23 +268,23 @@ const FullFromObj = (file: string, data: attributes): ?FullMetadata => {
   ) {
     return;
   }
-  let theArtist = data.hasOwnProperty('albumArtist')
+  const theArtist = data.hasOwnProperty('albumArtist')
     ? data.albumArtist
     : data.artist;
   const artistArray = getArtists(theArtist);
-  res.Artist = (artistArray.length > 1) ? artistArray : theArtist;
+  res.Artist = artistArray.length > 1 ? artistArray : theArtist;
   res.Album = data.album;
-  res.Track = Number.parseInt(data.track);
+  res.Track = Number.parseInt(data.track, 10);
   const { title, artists } = pullArtistsFromTitle(data.title);
   res.Title = title;
   res.MoreArtists = artists;
 
   // Now add any additional data we've got
   if (data.hasOwnProperty('year')) {
-    res.Year = Number.parseInt(data.year);
+    res.Year = Number.parseInt(data.year, 10);
   }
   if (data.hasOwnProperty('artist') && data.hasOwnProperty('albumArtist')) {
-    if (data.artist != data.albumArtist && res.MoreArtists) {
+    if (data.artist !== data.albumArtist && res.MoreArtists) {
       res.MoreArtists.push(data.artist);
     }
   }
@@ -303,13 +301,4 @@ const FullFromObj = (file: string, data: attributes): ?FullMetadata => {
     }
   }
   return res;
-};
-
-module.exports = {
-  fromFile,
-  fromFileAsync,
-  fromPath,
-  addPattern,
-  FullFromObj,
-  setCwd,
-};
+}

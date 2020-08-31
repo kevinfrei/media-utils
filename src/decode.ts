@@ -1,14 +1,10 @@
-// @flow
-// @format
-'use strict';
-
 // Module:
 // media/decode
 // Provides compressed audio to wav file tools
 // Everything is synchronous currently
 
-const path = require('path');
-const { ProcUtil, PathUtil } = require('@freik/node-utils');
+import path from 'path';
+import { ProcUtil, PathUtil } from '@freik/node-utils';
 
 import type { decoder, decoderAsync } from './index';
 
@@ -16,7 +12,12 @@ const mp3: decoder = (inputFile, outputFile) =>
   ProcUtil.spawnRes('lame', ['--quiet', '--decode', inputFile, outputFile]);
 
 const mp3Async: decoderAsync = async (inputFile, outputFile) =>
-  ProcUtil.spawnResAsync('lame', ['--quiet', '--decode', inputFile, outputFile]);
+  ProcUtil.spawnResAsync('lame', [
+    '--quiet',
+    '--decode',
+    inputFile,
+    outputFile,
+  ]);
 
 const flac: decoder = (inputFile, outputFile) =>
   ProcUtil.spawnRes('flac', ['-d', inputFile, '-o', outputFile]);
@@ -36,16 +37,14 @@ const ffmpeg: decoder = (inputFile, outputFile) =>
 const ffmpegAsync: decoderAsync = async (inputFile, outputFile) =>
   ProcUtil.spawnResAsync('ffmpeg', ['-i', inputFile, outputFile]);
 
-
 // K: we know we need to convert it.
 // First convert it to a .wav file
-const makeWave = (inputFile: string, fileType: ?string): ?string => {
+const makeWave = (inputFile: string, fileTypeMB?: string): string | void => {
   const wavConvert: {
-    [key: string]: decoder
+    [key: string]: decoder;
   } = { mp3, flac, wma: ffmpeg, mp4: aac, aac, m4a: aac, m4b: aac };
-  if (!fileType) {
-    fileType = path.extname(inputFile);
-  }
+
+  let fileType: string = fileTypeMB || path.extname(inputFile);
   if (fileType.length > 0 && fileType[0] === '.') {
     fileType = fileType.substr(1);
   }
@@ -66,16 +65,22 @@ const makeWave = (inputFile: string, fileType: ?string): ?string => {
 
 // K: we know we need to convert it.
 // First convert it to a .wav file
-const makeWaveAsync = async (inputFile: string, fileType: ?string): Promise<?string> => {
+const makeWaveAsync = async (
+  inputFile: string,
+  fileTypeMB?: string,
+): Promise<string | void> => {
   const wavConvert: {
-    [key: string]: decoderAsync
+    [key: string]: decoderAsync;
   } = {
-    mp3: mp3Async, flac: flacAsync, wma: ffmpegAsync, mp4: aacAsync,
-    aac: aacAsync, m4a: aacAsync, m4b: aacAsync
+    mp3: mp3Async,
+    flac: flacAsync,
+    wma: ffmpegAsync,
+    mp4: aacAsync,
+    aac: aacAsync,
+    m4a: aacAsync,
+    m4b: aacAsync,
   };
-  if (!fileType) {
-    fileType = path.extname(inputFile);
-  }
+  let fileType: string = fileTypeMB || path.extname(inputFile);
   if (fileType.length > 0 && fileType[0] === '.') {
     fileType = fileType.substr(1);
   }
@@ -89,24 +94,24 @@ const makeWaveAsync = async (inputFile: string, fileType: ?string): Promise<?str
   if (wavConvert[fileType] === undefined) {
     throw new Error('Unknown file type:' + fileType);
   }
-  if ((await (wavConvert[fileType])(inputFile, tmpFile))) {
+  if (await wavConvert[fileType](inputFile, tmpFile)) {
     return tmpFile;
   }
 };
 
-module.exports = {
-  m4a: aac,
-  m4aAsync: aacAsync,
-  mp3,
-  mp3Async,
-  flac,
-  flacAsync,
-  wma: ffmpeg,
-  wmaAsync: ffmpegAsync,
+export {
   aac,
-  aacAsync,
+  aac as m4a,
+  mp3,
+  flac,
   ffmpeg,
-  ffmpegAsync,
+  ffmpeg as wma,
   makeWave,
-  makeWaveAsync
+  aacAsync,
+  aacAsync as m4aAsync,
+  mp3Async,
+  flacAsync,
+  ffmpegAsync,
+  ffmpegAsync as wmaAsync,
+  makeWaveAsync,
 };

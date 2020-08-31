@@ -1,7 +1,5 @@
-// @format
-
-const { Metadata } = require('./../../lib/index');
-const log = false ? console.log : (a) => {};
+import { attributes, Metadata, SimpleMetadata } from '../index';
+const log = false ? console.log : (a: unknown) => {};
 
 it('From an mp3 file, Async', async () => {
   const md = await Metadata.fromFileAsync('01-quiet.mp3');
@@ -25,7 +23,7 @@ it('From an mp3 file', () => {
     title: 'Silence [w- Other Artist]',
   });
   log(md);
-  const fmd = Metadata.FullFromObj(filename, md);
+  const fmd = Metadata.FullFromObj(filename, (md as unknown) as attributes);
   expect(fmd).toEqual({
     OriginalPath: filename,
     Artist: 'The Artist',
@@ -58,7 +56,7 @@ it('From an m4a file', () => {
     title: 'Silence [w- Other Artist]',
   });
   log(md);
-  const fmd = Metadata.FullFromObj(filename, md);
+  const fmd = Metadata.FullFromObj(filename, (md as unknown) as attributes);
   expect(fmd).toEqual({
     OriginalPath: filename,
     Artist: 'The Artist',
@@ -91,7 +89,7 @@ it('From a flac file', () => {
     title: 'Silence [w- Other Artist]',
   });
   log(md);
-  const fmd = Metadata.FullFromObj(filename, md);
+  const fmd = Metadata.FullFromObj(filename, (md as unknown) as attributes);
   expect(fmd).toEqual({
     OriginalPath: filename,
     Artist: 'The Artist',
@@ -113,7 +111,7 @@ it('Generic path', () => {
     title: 'title',
   });
   log(md);
-  const fmd = Metadata.FullFromObj(filename, md);
+  const fmd = Metadata.FullFromObj(filename, (md as unknown) as attributes);
   expect(fmd).toEqual({
     OriginalPath: filename,
     Artist: 'artist',
@@ -135,7 +133,7 @@ it('Generic path, Two Primary artists', () => {
     title: 'title',
   });
   log(md);
-  const fmd = Metadata.FullFromObj(filename, md);
+  const fmd = Metadata.FullFromObj(filename, (md as unknown) as attributes);
   expect(fmd).toEqual({
     OriginalPath: filename,
     Artist: ['artist 1', 'artist 2'],
@@ -157,7 +155,7 @@ it('Generic path, Multiple Primary artists', () => {
     title: 'title',
   });
   log(md);
-  const fmd = Metadata.FullFromObj(filename, md);
+  const fmd = Metadata.FullFromObj(filename, (md as unknown) as attributes);
   expect(fmd).toEqual({
     OriginalPath: filename,
     Artist: ['artist 1', 'artist 2', 'artist 3', 'artist 4'],
@@ -177,7 +175,7 @@ it('Generic path, no year', () => {
     title: 'title',
   });
   log(md);
-  const fmd = Metadata.FullFromObj(filename, md);
+  const fmd = Metadata.FullFromObj(filename, (md as unknown) as attributes);
   expect(fmd).toEqual({
     OriginalPath: filename,
     Artist: 'artist',
@@ -198,7 +196,7 @@ it('Generic path, other artist', () => {
     title: 'title [feat- Other Artist]',
   });
   log(md);
-  const fmd = Metadata.FullFromObj(filename, md);
+  const fmd = Metadata.FullFromObj(filename, (md as unknown) as attributes);
   expect(fmd).toEqual({
     OriginalPath: filename,
     Artist: 'artist',
@@ -221,7 +219,7 @@ it('Generic path, 2 other artists', () => {
     title: 'title [feat- Other Artist 1 & Other Artist 2]',
   });
   log(md);
-  const fmd = Metadata.FullFromObj(filename, md);
+  const fmd = Metadata.FullFromObj(filename, (md as unknown) as attributes);
   expect(fmd).toEqual({
     OriginalPath: filename,
     Artist: 'artist',
@@ -244,7 +242,7 @@ it('Generic path, multiple other artists', () => {
     title: 'title [feat- Other Artist 1, Other Artist 2 & Other Artist 3]',
   });
   log(md);
-  const fmd = Metadata.FullFromObj(filename, md);
+  const fmd = Metadata.FullFromObj(filename, (md as unknown) as attributes);
   expect(fmd).toEqual({
     OriginalPath: filename,
     Artist: 'artist',
@@ -268,7 +266,7 @@ it('VA, other artist', () => {
     title: 'title [with Other Artist]',
   });
   log(md);
-  const fmd = Metadata.FullFromObj(filename, md);
+  const fmd = Metadata.FullFromObj(filename, (md as unknown) as attributes);
   expect(fmd).toEqual({
     OriginalPath: filename,
     Artist: 'artist',
@@ -293,7 +291,7 @@ it('Soundtrack, other artist', () => {
     title: 'title [featuring Other Artist]',
   });
   log(md);
-  const fmd = Metadata.FullFromObj(filename, md);
+  const fmd = Metadata.FullFromObj(filename, (md as unknown) as attributes);
   expect(fmd).toEqual({
     OriginalPath: filename,
     Artist: 'artist',
