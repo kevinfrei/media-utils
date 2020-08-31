@@ -7,8 +7,8 @@
 // Provides wav file to compressed audio file tools
 // Everything is synchronous currently
 
-const { ProcUtil } = require('my-node-utils');
-const { ObjUtil } = require('my-utils');
+const { ProcUtil } = require('@freik/node-utils');
+const { ObjUtil } = require('@freik/core-utils');
 
 import type { encoder, encoderAsync } from './index';
 

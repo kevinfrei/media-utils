@@ -10,7 +10,7 @@ const path = require('path');
 const {
   ProcUtil,
   PathUtil
-} = require('my-node-utils');
+} = require('@freik/node-utils');
 
 import type { decoder, decoderAsync } from './index';
 declare var mp3: (inputFile: any, outputFile: any) => any;

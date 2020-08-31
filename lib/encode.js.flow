@@ -7,11 +7,11 @@
 
 const {
   ProcUtil
-} = require('my-node-utils');
+} = require('@freik/node-utils');
 
 const {
   ObjUtil
-} = require('my-utils');
+} = require('@freik/core-utils');
 
 import type { encoder, encoderAsync } from './index';
 declare var makeM4aArgs: (wavFile: any, outputFilename: any, options: any, attrs: any) => Array<string>;

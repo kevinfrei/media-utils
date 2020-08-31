@@ -10,14 +10,14 @@ const util = require('util');
 
 const {
   ObjUtil
-} = require('my-utils');
+} = require('@freik/core-utils');
 
 const {
   ProcUtil
-} = require('my-node-utils');
+} = require('@freik/node-utils');
 
 import type { SimpleMetadata, FullMetadata, attributes, regexPattern, mdAcquire, mdAcquireAsync } from './index';
-import type { spawnResult } from 'my-node-utils';
+import type { spawnResult } from '@freik/node-utils';
 const cp = {
   spawnAsync: ProcUtil.spawnAsync,
   ...ocp
