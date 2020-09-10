@@ -19,12 +19,12 @@
   "author": "Kevin Frei (kevinfrei@hotmail.com)",
   "license": "MIT",
   "dependencies": {
-    "@freik/core-utils": "^0.3.3",
-    "@freik/node-utils": "^0.2.3"
+    "@freik/core-utils": "^0.4.1",
+    "@freik/node-utils": "^0.2.5"
   },
   "devDependencies": {
-    "@types/jest": "^26.0.10",
-    "@types/node": "^14.6.2",
+    "@types/jest": "^26.0.13",
+    "@types/node": "^14.6.4",
     "jest": "^26.4.2",
     "jest-extended": "^0.11.5",
     "prettier": "^2.1.1",
