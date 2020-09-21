@@ -9,30 +9,38 @@
     "build": "rimraf lib && tsc",
     "prepare": "yarn run build",
     "prepublishOnly": "yarn test && yarn run lint",
-    "format": "prettier --write \"src/**/*.ts\"",
+    "format": "prettier --write \"src/**/*.ts\" \"*.md\" \"*.json\"",
     "lint": "tslint -p tsconfig.json",
     "preversion": "yarn run lint",
     "version": "yarn run format && git add -A src",
-    "postversion": "git push && git push --tags"
+    "postversion": "git push && git push --tags",
+    "compile": "tsc --noEmit",
+    "chk": "yarn format && yarn lint && yarn compile && yarn test"
   },
   "repository": "https://github.com/kevinfrei/media-utils.git",
   "author": "Kevin Frei (kevinfrei@hotmail.com)",
   "license": "MIT",
   "dependencies": {
-    "@freik/core-utils": "^0.4.1",
+    "@freik/core-utils": "^0.4.2",
     "@freik/node-utils": "^0.2.5"
   },
+  "husky": {
+    "hooks": {
+      "pre-push": "yarn chk"
+    }
+  },
   "devDependencies": {
-    "@types/jest": "^26.0.13",
-    "@types/node": "^14.6.4",
+    "@types/jest": "^26.0.14",
+    "@types/node": "^14.11.1",
+    "husky": "^4.3.0",
     "jest": "^26.4.2",
     "jest-extended": "^0.11.5",
-    "prettier": "^2.1.1",
+    "prettier": "^2.1.2",
     "rimraf": "^3.0.2",
-    "ts-jest": "^26.3.0",
+    "ts-jest": "^26.4.0",
     "tslint": "^6.1.3",
     "tslint-config-prettier": "^1.18.0",
-    "typescript": "^4.0.2"
+    "typescript": "^4.0.3"
   },
   "jest": {
     "setupFilesAfterEnv": [

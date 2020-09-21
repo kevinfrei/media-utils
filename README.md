@@ -10,34 +10,35 @@ worry about those.
 ### Types
 
 There are a number of Flow types exported by the modules. They're all exported directly from `media-utils`:
+
 ```typescript
 // This is a helper type used in a few places
 type attributes = { [key: string]: string };
 
 // This is the most simplistic strongly typed metadata you'll find
 type SimpleMetadata = {
-  artist: string,
-  album: string,
-  year?: string,
-  track: string,
-  title: string,
-  compilation?: 'va' | 'ost'
+  artist: string;
+  album: string;
+  year?: string;
+  track: string;
+  title: string;
+  compilation?: 'va' | 'ost';
 };
 
 // This is a more robust metadata type, meant to be used in,
 // among other scenarios, situations where you're moving files around
 type FullMetadata = {
-  OriginalPath: string,
-  Artist: string,
-  Album: string,
-  Year?: number,
-  Track: number,
-  Title: string,
-  VAType?: 'va' | 'ost',
-  MoreArtists?: Array<string>,
-  Mix?: Array<string>,
-  Disk?: number,
-  DiskOf?: number
+  OriginalPath: string;
+  Artist: string;
+  Album: string;
+  Year?: number;
+  Track: number;
+  Title: string;
+  VAType?: 'va' | 'ost';
+  MoreArtists?: Array<string>;
+  Mix?: Array<string>;
+  Disk?: number;
+  DiskOf?: number;
 };
 
 // This is a general mechanism for describing how to extract
@@ -46,32 +47,32 @@ type regexPattern = {
   // This can be something like "soundtrack"
   // or "true/false" to simply indicate that it's
   // a compilation of works by various artists
-  compilation?: string | boolean,
+  compilation?: string | boolean;
   // This is the regular expression to match
-  rgx: RegExp,
+  rgx: RegExp;
   // These are the names of the metadata fields
   // and their corresponding RegExp capture numbers
-  metadata: { [key: string]: number }
+  metadata: { [key: string]: number };
 };
 
 // A function type for metadata acquisition
 type mdAcquire = (pathname: string) => ?SimpleMetadata;
 
 // Same thing, but async...
-type mdAcquireAsync = (pathname: string) => Promise<?SimpleMetadata>
+type mdAcquireAsync = (pathname: string) => Promise<?SimpleMetadata>;
 
 // A function type for decoding audio
 type decoder = (inputFile: string, outputFile: string) => boolean;
 
 // Ditto, async
-type decoderAsync =  (inputFile: string, outputFile: string) => Promise<boolean>;
+type decoderAsync = (inputFile: string, outputFile: string) => Promise<boolean>;
 
 // A function type for encoding audio
 type encoder = (
   wavFile: string,
   outputFilename: string,
   options: ?attributes,
-  attrs: ?attributes
+  attrs: ?attributes,
 ) => boolean;
 
 // Ditto, async
@@ -79,16 +80,13 @@ type encoderAsync = (
   wavFile: string,
   outputFilename: string,
   options: ?attributes,
-  attrs: ?attributes
+  attrs: ?attributes,
 ) => Promise<boolean>;
 ```
 
 ## Metadata
 
-
-
 ## Decode
-
 
 ## Encode
 
@@ -116,7 +114,7 @@ function ffmpegAsync(inputFile, outputFilename, options, attrs): encoderAsync;
 ```
 
 Wrappers around `ffmpeg`. Given that it's wrapping such a flexible tool, you
-*could* use this to do video transcoding as well, but I don't really encourage
+_could_ use this to do video transcoding as well, but I don't really encourage
 that right now. These are the most flexible encoders, as FFmpeg does an
 excellent job of metadata translation between types. There's no constrain
 (generally) on the input audio type. FFmpeg will just do it's transcoding magic.
