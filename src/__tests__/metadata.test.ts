@@ -2,19 +2,8 @@ import { attributes, Metadata, SimpleMetadata } from '../index';
 const log = false ? console.log : (a: unknown) => {};
 
 it('From an mp3 file, Async', async () => {
-  const md = await Metadata.fromFileAsync('01-quiet.mp3');
-  expect(md).toEqual({
-    artist: 'The Artist',
-    year: '2003',
-    album: 'No Album',
-    track: '01',
-    title: 'Silence [w- Other Artist]',
-  });
-  log(md);
-});
-it('From an mp3 file', () => {
   const filename = '01-quiet.mp3';
-  const md = Metadata.fromFile(filename);
+  const md = await Metadata.fromFileAsync(filename);
   expect(md).toEqual({
     artist: 'The Artist',
     year: '2003',
@@ -35,19 +24,8 @@ it('From an mp3 file', () => {
   });
 });
 it('From an m4a file, Async', async () => {
-  const md = await Metadata.fromFileAsync('01-quiet.m4a');
-  expect(md).toEqual({
-    artist: 'The Artist',
-    year: '2003',
-    album: 'No Album',
-    track: '1',
-    title: 'Silence [w- Other Artist]',
-  });
-  log(md);
-});
-it('From an m4a file', () => {
   const filename = '01-quiet.m4a';
-  const md = Metadata.fromFile(filename);
+  const md = await Metadata.fromFileAsync(filename);
   expect(md).toEqual({
     artist: 'The Artist',
     year: '2003',
@@ -68,19 +46,8 @@ it('From an m4a file', () => {
   });
 });
 it('From a flac file, Async', async () => {
-  const md = await Metadata.fromFileAsync('01-quiet.flac');
-  expect(md).toEqual({
-    artist: 'The Artist',
-    year: '2003',
-    album: 'No Album',
-    track: '01',
-    title: 'Silence [w- Other Artist]',
-  });
-  log(md);
-});
-it('From a flac file', () => {
   const filename = '01-quiet.flac';
-  const md = Metadata.fromFile(filename);
+  const md = await Metadata.fromFileAsync(filename);
   expect(md).toEqual({
     artist: 'The Artist',
     year: '2003',
