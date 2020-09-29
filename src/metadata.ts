@@ -1,28 +1,24 @@
-// @flow
-// @format
-'use strict';
-
+import { FTONData } from '@freik/core-utils';
+import { promises as fs } from 'fs';
+import type { MediaInfo } from 'mediainfo.js';
+import MediaInfoFactory from 'mediainfo.js';
 import path from 'path';
-import ocp from 'child_process';
-
-import { ObjUtil } from '@freik/core-utils';
-import { ProcUtil } from '@freik/node-utils';
-
 import type {
-  SimpleMetadata,
-  FullMetadata,
   attributes,
-  regexPattern,
+  FullMetadata,
   mdAcquire,
   mdAcquireAsync,
+  regexPattern,
+  SimpleMetadata,
 } from './index';
 
-import type { spawnResult } from '@freik/node-utils';
+let mediainfo: MediaInfo | null = null;
 
-const cp = {
-  spawnAsync: ProcUtil.spawnAsync,
-  spawnSync: ocp.spawnSync,
-};
+const hasStr = <K extends string>(key: K, x: any): x is { [k in K]: string } =>
+  key in x && typeof x.key === 'string';
+
+const hasObj = <K extends string>(key: K, x: any): x is { [k in K]: string } =>
+  key in x && typeof x.key === 'object';
 
 let cwd: string = process.cwd();
 
@@ -143,78 +139,61 @@ export const fromPath: mdAcquire = (pthnm) => {
   }
 };
 
-const fromFileArgs = (pathname: string): string[] => [
-  ObjUtil.deQuote(
-    '--Output=General;{"artist":"%Performer%",' +
-      '"albumArtist":"%Album/Performer%",' +
-      '"compilation":"%Compilation%",' +
-      '"year":"%Recorded_Date%",' +
-      '"album":"%Album%",' +
-      '"track":"%Track/Position%",' +
-      '"title":"%Title%"}',
-  ),
-  pathname,
-];
-
-const fromFileFinish = (
-  res: spawnResult | ocp.SpawnSyncReturns<string>,
-): SimpleMetadata | void => {
-  if (res.error || res.status || res.stdout.length < 20) {
-    return;
+function checkVa(split: string[]): [artist: string, vatype?: 'ost' | 'va'] {
+  if (split.length > 1) {
+    if (split[0].toLowerCase().indexOf('various artists') === 0) {
+      const [, ...theSplit] = split;
+      return [theSplit.join(' / '), 'va'];
+    }
+    if (split[0].toLowerCase().indexOf('soundtrack') === 0) {
+      const [, ...theSplit] = split;
+      return [theSplit.join(' / '), 'ost'];
+    }
   }
+  return [split.join(' / ')];
+}
 
-  let readyForParsing: string = res.stdout.toString();
-  readyForParsing = readyForParsing.replace(/[\x01-\x1f]/g, '');
-  const metadata: { [key: string]: string } = ObjUtil.reQuote(readyForParsing);
-
+const fromFileFinish = (res: {
+  media: {
+    '@ref': string;
+    track: FTONData[];
+  };
+}): SimpleMetadata | void => {
+  const metadata: FTONData = res.media.track[0];
   // Requirements: Album, Artist, Track, Title
   if (
-    !metadata.title ||
-    !metadata.track ||
-    !metadata.artist ||
-    !metadata.album
+    !metadata ||
+    !hasStr('Title', metadata) ||
+    !hasStr('Track_Position', metadata) ||
+    !hasStr('Performer', metadata) ||
+    !hasStr('Album', metadata)
   ) {
     return;
   }
-  const title = metadata.title.trim();
-  const track = metadata.track.trim();
-  const album = metadata.album.trim();
-  let artist = metadata.artist.trim();
-  const comp = metadata.compilation ? metadata.compilation.trim() : undefined;
-  const year = metadata.year ? metadata.year.trim() : undefined;
+  const title = metadata.Title.trim();
+  const track = metadata.Track_Position.trim();
+  const album = metadata.Album.trim();
+  let artist = metadata.Performer.trim();
+  let albumPerformer = hasStr('Album_Performer', metadata)
+    ? metadata.Album_Performer.trim()
+    : '';
+  const year = hasStr('Recorded_Date', metadata)
+    ? metadata.Recorded_Date.trim()
+    : undefined;
 
   // There's some weirdnes WRT %Performer% sometimes...
-  const split = artist.split(' / ');
-  if (split.length === 2 && split[0] === split[1]) {
-    artist = split[0].trim();
-  } else if (split.length > 1) {
-    // TODO: do something here, but not this:
-    // console.log(artist);
+  const asplit = artist.split(' / ');
+  const psplit = albumPerformer?.split(' / ');
+
+  if (asplit.length === 2 && asplit[0].trim() === asplit[1].trim()) {
+    artist = asplit[0].trim();
   }
 
-  if (metadata.albumArtist === '') {
-    delete metadata.albumArtist;
-  } else if (
-    false &&
-    metadata.albumArtist === metadata.artist &&
-    metadata.albumArtist !== 'Various Artists'
-  ) {
-    delete metadata.albumArtist;
-  }
-  let compilation: 'va' | 'ost' | undefined;
-  if (
-    (comp && metadata.albumArtist) ||
-    metadata.albumArtist === 'Various Artists' ||
-    metadata.albumArtist === 'VA'
-  ) {
-    compilation = 'va';
-  } else if (
-    metadata.albumArtist === 'Soundtrack' ||
-    metadata.albumArtist === 'ost'
-  ) {
-    compilation = 'ost';
-  }
-
+  let acomp;
+  let pcomp;
+  [artist, acomp] = checkVa(asplit);
+  [albumPerformer, pcomp] = checkVa(psplit);
+  const compilation = acomp ?? pcomp;
   if (compilation && year) {
     return { artist, album, year, track, title, compilation };
   } else if (compilation) {
@@ -226,21 +205,42 @@ const fromFileFinish = (
   }
 };
 
-export const fromFileAsync: mdAcquireAsync = async (pathname: string) =>
-  fromFileFinish(
-    await cp.spawnAsync('mediainfo', fromFileArgs(pathname), {
-      cwd,
-      stdio: ['pipe', 'pipe', 'pipe'],
-    }),
-  );
+async function acquireMetadata(
+  pathname: string,
+): Promise<{
+  media: { '@ref': string; track: { [key: string]: string }[] };
+}> {
+  let buffer: Uint8Array | null = null;
+  let fileHandle: fs.FileHandle | null = null;
+  let fileSize: number = 0;
 
-export const fromFile: mdAcquire = (pathname: string) =>
-  fromFileFinish(
-    cp.spawnSync('mediainfo', fromFileArgs(pathname), {
-      cwd,
-      encoding: 'utf8',
-    }),
-  );
+  const readChunk = async (size: number, offset: number) => {
+    if (!buffer || buffer.length !== size) {
+      buffer = new Uint8Array(size);
+    }
+    await fileHandle!.read(buffer, 0, size, offset);
+    return buffer;
+  };
+  try {
+    fileHandle = await fs.open(pathname, 'r');
+    fileSize = (await fileHandle.stat()).size;
+    return (await mediainfo!.analyzeData(() => fileSize, readChunk)) as any;
+  } catch (err) {
+    throw err;
+  } finally {
+    if (fileHandle) {
+      await fileHandle.close();
+    }
+  }
+}
+
+export const fromFileAsync: mdAcquireAsync = async (pathname: string) => {
+  if (!mediainfo) {
+    mediainfo = (await MediaInfoFactory({ format: 'object' })) as any;
+  }
+  const result = await acquireMetadata(pathname);
+  return fromFileFinish(result);
+};
 
 export function FullFromObj(
   file: string,
@@ -261,14 +261,14 @@ export function FullFromObj(
     DiskOf?: number
 */
   if (
-    !(data.hasOwnProperty('artist') || data.hasOwnProperty('albumArtist')) ||
-    !data.hasOwnProperty('album') ||
-    !data.hasOwnProperty('track') ||
-    !data.hasOwnProperty('title')
+    !(hasStr('artist', data) || hasStr('albumArtist', data)) ||
+    !hasStr('album', data) ||
+    !hasStr('track', data) ||
+    !hasStr('title', data)
   ) {
     return;
   }
-  const theArtist = data.hasOwnProperty('albumArtist')
+  const theArtist = hasStr('albumArtist', data)
     ? data.albumArtist
     : data.artist;
   const artistArray = getArtists(theArtist);
@@ -280,20 +280,20 @@ export function FullFromObj(
   res.MoreArtists = artists;
 
   // Now add any additional data we've got
-  if (data.hasOwnProperty('year')) {
+  if (hasStr('year', data)) {
     res.Year = Number.parseInt(data.year, 10);
   }
-  if (data.hasOwnProperty('artist') && data.hasOwnProperty('albumArtist')) {
+  if (hasStr('artist', data) && hasStr('albumArtist', data)) {
     if (data.artist !== data.albumArtist && res.MoreArtists) {
       res.MoreArtists.push(data.artist);
     }
   }
-  if (data.hasOwnProperty('moreArtists') && res.MoreArtists) {
+  if (hasStr('moreArtists', data) && res.MoreArtists) {
     res.MoreArtists = [...res.MoreArtists, ...data.moreArtists];
   } else if (res.MoreArtists && res.MoreArtists.length === 0) {
     delete res.MoreArtists;
   }
-  if (data.compilation) {
+  if (hasStr('compilation', data)) {
     if (data.compilation === 'va') {
       res.VAType = 'va';
     } else if (data.compilation === 'ost') {

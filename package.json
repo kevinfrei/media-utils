@@ -22,7 +22,8 @@
   "license": "MIT",
   "dependencies": {
     "@freik/core-utils": "^0.4.2",
-    "@freik/node-utils": "^0.2.5"
+    "@freik/node-utils": "^0.2.5",
+    "mediainfo.js": "^0.1.4"
   },
   "husky": {
     "hooks": {
