@@ -1,4 +1,4 @@
-import { attributes, Metadata, SimpleMetadata } from '../index';
+import { Attributes, Metadata } from '../index';
 const log = false ? console.log : (a: unknown) => {};
 
 it('From an mp3 file, Async', async () => {
@@ -12,15 +12,15 @@ it('From an mp3 file, Async', async () => {
     title: 'Silence [w- Other Artist]',
   });
   log(md);
-  const fmd = Metadata.FullFromObj(filename, (md as unknown) as attributes);
+  const fmd = Metadata.FullFromObj(filename, (md as unknown) as Attributes);
   expect(fmd).toEqual({
-    OriginalPath: filename,
-    Artist: 'The Artist',
-    Year: 2003,
-    Album: 'No Album',
-    Track: 1,
-    Title: 'Silence',
-    MoreArtists: ['Other Artist'],
+    originalPath: filename,
+    artist: 'The Artist',
+    year: 2003,
+    album: 'No Album',
+    track: 1,
+    title: 'Silence',
+    moreArtists: ['Other Artist'],
   });
 });
 it('From an m4a file, Async', async () => {
@@ -34,15 +34,15 @@ it('From an m4a file, Async', async () => {
     title: 'Silence [w- Other Artist]',
   });
   log(md);
-  const fmd = Metadata.FullFromObj(filename, (md as unknown) as attributes);
+  const fmd = Metadata.FullFromObj(filename, (md as unknown) as Attributes);
   expect(fmd).toEqual({
-    OriginalPath: filename,
-    Artist: 'The Artist',
-    Year: 2003,
-    Album: 'No Album',
-    Track: 1,
-    Title: 'Silence',
-    MoreArtists: ['Other Artist'],
+    originalPath: filename,
+    artist: 'The Artist',
+    year: 2003,
+    album: 'No Album',
+    track: 1,
+    title: 'Silence',
+    moreArtists: ['Other Artist'],
   });
 });
 it('From a flac file, Async', async () => {
@@ -56,15 +56,15 @@ it('From a flac file, Async', async () => {
     title: 'Silence [w- Other Artist]',
   });
   log(md);
-  const fmd = Metadata.FullFromObj(filename, (md as unknown) as attributes);
+  const fmd = Metadata.FullFromObj(filename, (md as unknown) as Attributes);
   expect(fmd).toEqual({
-    OriginalPath: filename,
-    Artist: 'The Artist',
-    Year: 2003,
-    Album: 'No Album',
-    Track: 1,
-    Title: 'Silence',
-    MoreArtists: ['Other Artist'],
+    originalPath: filename,
+    artist: 'The Artist',
+    year: 2003,
+    album: 'No Album',
+    track: 1,
+    title: 'Silence',
+    moreArtists: ['Other Artist'],
   });
 });
 it('Generic path', () => {
@@ -78,14 +78,14 @@ it('Generic path', () => {
     title: 'title',
   });
   log(md);
-  const fmd = Metadata.FullFromObj(filename, (md as unknown) as attributes);
+  const fmd = Metadata.FullFromObj(filename, (md as unknown) as Attributes);
   expect(fmd).toEqual({
-    OriginalPath: filename,
-    Artist: 'artist',
-    Year: 1983,
-    Album: 'album',
-    Track: 1,
-    Title: 'title',
+    originalPath: filename,
+    artist: 'artist',
+    year: 1983,
+    album: 'album',
+    track: 1,
+    title: 'title',
   });
 });
 it('Generic path, Two Primary artists', () => {
@@ -100,14 +100,14 @@ it('Generic path, Two Primary artists', () => {
     title: 'title',
   });
   log(md);
-  const fmd = Metadata.FullFromObj(filename, (md as unknown) as attributes);
+  const fmd = Metadata.FullFromObj(filename, (md as unknown) as Attributes);
   expect(fmd).toEqual({
-    OriginalPath: filename,
-    Artist: ['artist 1', 'artist 2'],
-    Year: 1983,
-    Album: 'album',
-    Track: 1,
-    Title: 'title',
+    originalPath: filename,
+    artist: ['artist 1', 'artist 2'],
+    year: 1983,
+    album: 'album',
+    track: 1,
+    title: 'title',
   });
 });
 it('Generic path, Multiple Primary artists', () => {
@@ -122,14 +122,14 @@ it('Generic path, Multiple Primary artists', () => {
     title: 'title',
   });
   log(md);
-  const fmd = Metadata.FullFromObj(filename, (md as unknown) as attributes);
+  const fmd = Metadata.FullFromObj(filename, (md as unknown) as Attributes);
   expect(fmd).toEqual({
-    OriginalPath: filename,
-    Artist: ['artist 1', 'artist 2', 'artist 3', 'artist 4'],
-    Year: 1983,
-    Album: 'album',
-    Track: 1,
-    Title: 'title',
+    originalPath: filename,
+    artist: ['artist 1', 'artist 2', 'artist 3', 'artist 4'],
+    year: 1983,
+    album: 'album',
+    track: 1,
+    title: 'title',
   });
 });
 it('Generic path, no year', () => {
@@ -142,13 +142,13 @@ it('Generic path, no year', () => {
     title: 'title',
   });
   log(md);
-  const fmd = Metadata.FullFromObj(filename, (md as unknown) as attributes);
+  const fmd = Metadata.FullFromObj(filename, (md as unknown) as Attributes);
   expect(fmd).toEqual({
-    OriginalPath: filename,
-    Artist: 'artist',
-    Album: 'album',
-    Track: 1,
-    Title: 'title',
+    originalPath: filename,
+    artist: 'artist',
+    album: 'album',
+    track: 1,
+    title: 'title',
   });
 });
 it('Generic path, other artist', () => {
@@ -163,15 +163,15 @@ it('Generic path, other artist', () => {
     title: 'title [feat- Other Artist]',
   });
   log(md);
-  const fmd = Metadata.FullFromObj(filename, (md as unknown) as attributes);
+  const fmd = Metadata.FullFromObj(filename, (md as unknown) as Attributes);
   expect(fmd).toEqual({
-    OriginalPath: filename,
-    Artist: 'artist',
-    Year: 1983,
-    Album: 'album',
-    Track: 2,
-    Title: 'title',
-    MoreArtists: ['Other Artist'],
+    originalPath: filename,
+    artist: 'artist',
+    year: 1983,
+    album: 'album',
+    track: 2,
+    title: 'title',
+    moreArtists: ['Other Artist'],
   });
 });
 it('Generic path, 2 other artists', () => {
@@ -186,15 +186,15 @@ it('Generic path, 2 other artists', () => {
     title: 'title [feat- Other Artist 1 & Other Artist 2]',
   });
   log(md);
-  const fmd = Metadata.FullFromObj(filename, (md as unknown) as attributes);
+  const fmd = Metadata.FullFromObj(filename, (md as unknown) as Attributes);
   expect(fmd).toEqual({
-    OriginalPath: filename,
-    Artist: 'artist',
-    Year: 1983,
-    Album: 'album',
-    Track: 2,
-    Title: 'title',
-    MoreArtists: ['Other Artist 1', 'Other Artist 2'],
+    originalPath: filename,
+    artist: 'artist',
+    year: 1983,
+    album: 'album',
+    track: 2,
+    title: 'title',
+    moreArtists: ['Other Artist 1', 'Other Artist 2'],
   });
 });
 it('Generic path, multiple other artists', () => {
@@ -209,15 +209,15 @@ it('Generic path, multiple other artists', () => {
     title: 'title [feat- Other Artist 1, Other Artist 2 & Other Artist 3]',
   });
   log(md);
-  const fmd = Metadata.FullFromObj(filename, (md as unknown) as attributes);
+  const fmd = Metadata.FullFromObj(filename, (md as unknown) as Attributes);
   expect(fmd).toEqual({
-    OriginalPath: filename,
-    Artist: 'artist',
-    Year: 1983,
-    Album: 'album',
-    Track: 2,
-    Title: 'title',
-    MoreArtists: ['Other Artist 1', 'Other Artist 2', 'Other Artist 3'],
+    originalPath: filename,
+    artist: 'artist',
+    year: 1983,
+    album: 'album',
+    track: 2,
+    title: 'title',
+    moreArtists: ['Other Artist 1', 'Other Artist 2', 'Other Artist 3'],
   });
 });
 it('VA, other artist', () => {
@@ -233,16 +233,16 @@ it('VA, other artist', () => {
     title: 'title [with Other Artist]',
   });
   log(md);
-  const fmd = Metadata.FullFromObj(filename, (md as unknown) as attributes);
+  const fmd = Metadata.FullFromObj(filename, (md as unknown) as Attributes);
   expect(fmd).toEqual({
-    OriginalPath: filename,
-    Artist: 'artist',
-    Year: 1983,
-    Album: 'album',
-    Track: 2,
-    Title: 'title',
-    MoreArtists: ['Other Artist'],
-    VAType: 'va',
+    originalPath: filename,
+    artist: 'artist',
+    year: 1983,
+    album: 'album',
+    track: 2,
+    title: 'title',
+    moreArtists: ['Other Artist'],
+    vaType: 'va',
   });
 });
 it('Soundtrack, other artist', () => {
@@ -258,15 +258,15 @@ it('Soundtrack, other artist', () => {
     title: 'title [featuring Other Artist]',
   });
   log(md);
-  const fmd = Metadata.FullFromObj(filename, (md as unknown) as attributes);
+  const fmd = Metadata.FullFromObj(filename, (md as unknown) as Attributes);
   expect(fmd).toEqual({
-    OriginalPath: filename,
-    Artist: 'artist',
-    Year: 2001,
-    Album: 'album',
-    Track: 2,
-    Title: 'title',
-    MoreArtists: ['Other Artist'],
-    VAType: 'ost',
+    originalPath: filename,
+    artist: 'artist',
+    year: 2001,
+    album: 'album',
+    track: 2,
+    title: 'title',
+    moreArtists: ['Other Artist'],
+    vaType: 'ost',
   });
 });

@@ -1,6 +1,6 @@
 {
   "name": "@freik/media-utils",
-  "version": "0.2.3",
+  "version": "0.3.0",
   "description": "Utilities for dealing with media files",
   "main": "./lib/index.js",
   "types": "./lib/index.d.ts",
@@ -10,7 +10,7 @@
     "prepare": "yarn run build",
     "prepublishOnly": "yarn test && yarn run lint",
     "format": "prettier --write \"src/**/*.ts\" \"*.md\" \"*.json\"",
-    "lint": "yarn run eslint --fix --ext .ts./",
+    "lint": "yarn run eslint --fix --ext .ts src",
     "preversion": "yarn run lint",
     "version": "yarn run format && git add -A src",
     "postversion": "git push && git push --tags",

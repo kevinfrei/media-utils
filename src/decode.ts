@@ -6,12 +6,12 @@
 import path from 'path';
 import { ProcUtil, PathUtil } from '@freik/node-utils';
 
-import type { decoder, decoderAsync } from './index';
+import type { Decoder, DecoderAsync } from './index';
 
-const mp3: decoder = (inputFile, outputFile) =>
+const mp3: Decoder = (inputFile, outputFile) =>
   ProcUtil.spawnRes('lame', ['--quiet', '--decode', inputFile, outputFile]);
 
-const mp3Async: decoderAsync = async (inputFile, outputFile) =>
+const mp3Async: DecoderAsync = async (inputFile, outputFile) =>
   ProcUtil.spawnResAsync('lame', [
     '--quiet',
     '--decode',
@@ -19,29 +19,29 @@ const mp3Async: decoderAsync = async (inputFile, outputFile) =>
     outputFile,
   ]);
 
-const flac: decoder = (inputFile, outputFile) =>
+const flac: Decoder = (inputFile, outputFile) =>
   ProcUtil.spawnRes('flac', ['-d', inputFile, '-o', outputFile]);
 
-const flacAsync: decoderAsync = async (inputFile, outputFile) =>
+const flacAsync: DecoderAsync = async (inputFile, outputFile) =>
   ProcUtil.spawnResAsync('flac', ['-d', inputFile, '-o', outputFile]);
 
-const aac: decoder = (inputFile, outputFile) =>
+const aac: Decoder = (inputFile, outputFile) =>
   ProcUtil.spawnRes('faad', ['-o', outputFile, inputFile]);
 
-const aacAsync: decoderAsync = async (inputFile, outputFile) =>
+const aacAsync: DecoderAsync = async (inputFile, outputFile) =>
   ProcUtil.spawnResAsync('faad', ['-o', outputFile, inputFile]);
 
-const ffmpeg: decoder = (inputFile, outputFile) =>
+const ffmpeg: Decoder = (inputFile, outputFile) =>
   ProcUtil.spawnRes('ffmpeg', ['-i', inputFile, outputFile]);
 
-const ffmpegAsync: decoderAsync = async (inputFile, outputFile) =>
+const ffmpegAsync: DecoderAsync = async (inputFile, outputFile) =>
   ProcUtil.spawnResAsync('ffmpeg', ['-i', inputFile, outputFile]);
 
 // K: we know we need to convert it.
 // First convert it to a .wav file
 const makeWave = (inputFile: string, fileTypeMB?: string): string | void => {
   const wavConvert: {
-    [key: string]: decoder;
+    [key: string]: Decoder;
   } = { mp3, flac, wma: ffmpeg, mp4: aac, aac, m4a: aac, m4b: aac };
 
   let fileType: string = fileTypeMB || path.extname(inputFile);
@@ -70,7 +70,7 @@ const makeWaveAsync = async (
   fileTypeMB?: string,
 ): Promise<string | void> => {
   const wavConvert: {
-    [key: string]: decoderAsync;
+    [key: string]: DecoderAsync;
   } = {
     mp3: mp3Async,
     flac: flacAsync,

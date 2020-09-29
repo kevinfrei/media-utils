@@ -6,13 +6,13 @@
 import { ProcUtil } from '@freik/node-utils';
 import { ObjUtil } from '@freik/core-utils';
 
-import type { attributes, encoder, encoderAsync } from './index';
+import type { Attributes, Encoder, EncoderAsync } from './index';
 
 const makeM4aArgs = (
   wavFile: string,
   outputFilename: string,
-  options?: attributes,
-  attrs?: attributes,
+  options?: Attributes,
+  attrs?: Attributes,
 ): string[] => {
   let args: string[] = ['-w', '-o', outputFilename];
   if (options) {
@@ -25,12 +25,12 @@ const makeM4aArgs = (
   return args;
 };
 
-const m4a: encoder = (wavFile, outputFilename, options, attrs) => {
+const m4a: Encoder = (wavFile, outputFilename, options, attrs) => {
   const args = makeM4aArgs(wavFile, outputFilename, options, attrs);
   return ProcUtil.spawnRes('faac', args);
 };
 
-const m4aAsync: encoderAsync = async (
+const m4aAsync: EncoderAsync = async (
   wavFile,
   outputFilename,
   options,
@@ -43,8 +43,8 @@ const m4aAsync: encoderAsync = async (
 const makeFfmpegArgs = (
   inputFile: string,
   outputFilename: string,
-  options?: attributes,
-  attrs?: attributes,
+  options?: Attributes,
+  attrs?: Attributes,
 ): string[] => {
   // plus '-c:a', 'aac', '-cutoff', '16000'  in some world
   let args: string[] = ['-i', inputFile, '-vn'];
@@ -63,12 +63,12 @@ const makeFfmpegArgs = (
   return args;
 };
 
-const ffmpeg: encoder = (inputFile, outputFilename, options, attrs) => {
+const ffmpeg: Encoder = (inputFile, outputFilename, options, attrs) => {
   const args = makeFfmpegArgs(inputFile, outputFilename, options, attrs);
   return ProcUtil.spawnRes('ffmpeg', args);
 };
 
-const ffmpegAsync: encoderAsync = async (
+const ffmpegAsync: EncoderAsync = async (
   inputFile,
   outputFilename,
   options,
@@ -81,8 +81,8 @@ const ffmpegAsync: encoderAsync = async (
 const makeFlacArgs = (
   wavFile: string,
   outputFilename: string,
-  options?: attributes,
-  attrs?: attributes,
+  options?: Attributes,
+  attrs?: Attributes,
 ): string[] => {
   let args: string[] = [
     '--best',
@@ -116,12 +116,12 @@ const makeFlacArgs = (
   return args;
 };
 
-const flac: encoder = (wavFile, outputFilename, options, attrs) => {
+const flac: Encoder = (wavFile, outputFilename, options, attrs) => {
   const args = makeFlacArgs(wavFile, outputFilename, options, attrs);
   return ProcUtil.spawnRes('flac', args);
 };
 
-const flacAsync: encoderAsync = async (
+const flacAsync: EncoderAsync = async (
   wavFile,
   outputFilename,
   options,

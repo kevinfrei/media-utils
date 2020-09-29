@@ -40,7 +40,7 @@ export type MediaInfo = {
 };
 
 // This is a helper type used in a few places
-export type attributes = { [key: string]: string };
+export type Attributes = { [key: string]: string };
 
 // This is the most simplistic strongly typed metadata you'll find
 export interface SimpleMetadata {
@@ -55,22 +55,22 @@ export interface SimpleMetadata {
 // This is a more robust metadata type, meant to be used in,
 // among other scenarios, situations where you're moving files around
 export type FullMetadata = {
-  OriginalPath: string;
-  Artist: string[] | string;
-  Album: string;
-  Year?: number;
-  Track: number;
-  Title: string;
-  VAType?: 'va' | 'ost';
-  MoreArtists?: string[];
-  Mix?: string[];
-  Disk?: number;
-  DiskOf?: number;
+  originalPath: string;
+  artist: string[] | string;
+  album: string;
+  year?: number;
+  track: number;
+  title: string;
+  vaType?: 'va' | 'ost';
+  moreArtists?: string[];
+  mix?: string[];
+  disk?: number;
+  diskOf?: number;
 };
 
 // This is a general mechanism for describing how to extract
 // various metadata components out of a file path
-export type regexPattern = {
+export type RegexPattern = {
   // This can be something like "soundtrack"
   // or "true/false" to simply indicate that it's
   // a compilation of works by various artists
@@ -83,43 +83,43 @@ export type regexPattern = {
 };
 
 // A function type for metadata acquisition
-export type mdAcquire = (pathname: string) => SimpleMetadata | void;
+export type MDAcquire = (pathname: string) => SimpleMetadata | void;
 
 // Same thing, but async...
-export type mdAcquireAsync = (
+export type MDAcquireAsync = (
   pathname: string,
 ) => Promise<SimpleMetadata | void>;
 
 // A function type for decoding audio
-export type decoder = (inputFile: string, outputFile: string) => boolean;
+export type Decoder = (inputFile: string, outputFile: string) => boolean;
 
 // Ditto, async
-export type decoderAsync = (
+export type DecoderAsync = (
   inputFile: string,
   outputFile: string,
 ) => Promise<boolean>;
 
 // A function type for encoding audio
-export type encoder = (
+export type Encoder = (
   wavFile: string,
   outputFilename: string,
-  options?: attributes,
-  attrs?: attributes,
+  options?: Attributes,
+  attrs?: Attributes,
 ) => boolean;
 
 // Ditto, async
-export type encoderAsync = (
+export type EncoderAsync = (
   wavFile: string,
   outputFilename: string,
-  options?: attributes,
-  attrs?: attributes,
+  options?: Attributes,
+  attrs?: Attributes,
 ) => Promise<boolean>;
 
 export {
   Encode,
-  Encode as encoders,
+  Encode as Encoders,
   Decode,
-  Decode as decoders,
+  Decode as Decoders,
   Metadata,
-  Metadata as md,
+  Metadata as MD,
 };

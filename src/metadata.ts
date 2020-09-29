@@ -4,35 +4,27 @@ import type { MediaInfo } from 'mediainfo.js';
 import MediaInfoFactory from 'mediainfo.js';
 import path from 'path';
 import type {
-  attributes,
+  Attributes,
   FullMetadata,
-  mdAcquire,
-  mdAcquireAsync,
-  regexPattern,
+  MDAcquire,
+  MDAcquireAsync,
+  RegexPattern,
   SimpleMetadata,
 } from './index';
 
 let mediainfo: MediaInfo | null = null;
 
+// eslint-disable-next-line no-shadow
 function has<K extends string>(key: K, x: any): x is { [key in K]: unknown } {
   return key in x;
 }
 
+// eslint-disable-next-line no-shadow
 function hasStr<K extends string>(key: K, x: any): x is { [key in K]: string } {
   return has(key, x) && typeof x[key] === 'string';
 }
 
-function hasObj<K extends string>(key: K, x: any): x is { [key in K]: string } {
-  return has(key, x) && typeof x[key] === 'object';
-}
-
-let cwd: string = process.cwd();
-
-export function setCwd(pathname: string) {
-  cwd = pathname;
-}
-
-const patterns: regexPattern[] = [
+const patterns: RegexPattern[] = [
   {
     compilation: 'va',
     rgx: /^(?:.*\/)?(?:(?:va(?:rious artists)?)) - (\d+) - ([^\/]+)\/(\d+)(?: ?[-\.])? ([^\/]+) - ([^\/]+)$/i,
@@ -63,7 +55,7 @@ const patterns: regexPattern[] = [
   },
 ];
 
-const moreArtistsRE: RegExp = /\[(?:(?:w-)|(?:feat-)|(?:with)|(?:featuring)) (.*)\]/i;
+const moreArtistsRE = /\[(?:(?:w-)|(?:feat-)|(?:with)|(?:featuring)) (.*)\]/i;
 const getArtists = (artists: string): string[] => {
   if (artists.indexOf(' & ') >= 0) {
     return artists.split(', ').join(' & ').split(' & ');
@@ -77,7 +69,7 @@ const getArtists = (artists: string): string[] => {
 const pullArtistsFromTitle = (
   title: string,
 ): { title: string; artists: string[] } => {
-  const match = title.match(moreArtistsRE);
+  const match = moreArtistsRE.exec(title);
   if (!match) {
     return { title, artists: [] };
   }
@@ -89,8 +81,8 @@ const pullArtistsFromTitle = (
 export function addPattern(
   rgx: RegExp,
   metadata: { [key: string]: number },
-  compilation?: any,
-) {
+  compilation?: boolean,
+): void {
   if (compilation) {
     patterns.push({ rgx, metadata, compilation: true });
   } else {
@@ -98,13 +90,13 @@ export function addPattern(
   }
 }
 
-export const fromPath: mdAcquire = (pthnm) => {
+export const fromPath: MDAcquire = (pthnm) => {
   let pathname = pthnm.replace(/\\/g, '/');
 
   // A little helper
   const makeMetaDataFromRegex = (
     pathnm: string,
-    pattern: regexPattern,
+    pattern: RegexPattern,
   ): SimpleMetadata | void => {
     if (!pattern.rgx.test(pathnm)) {
       return;
@@ -195,10 +187,10 @@ const fromFileFinish = (res: {
     artist = asplit[0].trim();
   }
 
-  let acomp;
-  let pcomp;
-  [artist, acomp] = checkVa(asplit);
-  [albumPerformer, pcomp] = checkVa(psplit);
+  const [updateArtist, acomp] = checkVa(asplit);
+  artist = updateArtist;
+  const [updateAlbumPerformer, pcomp] = checkVa(psplit);
+  albumPerformer = updateAlbumPerformer;
   const compilation = acomp ?? pcomp;
   if (compilation && year) {
     return { artist, album, year, track, title, compilation };
@@ -211,14 +203,13 @@ const fromFileFinish = (res: {
   }
 };
 
-async function acquireMetadata(
-  pathname: string,
-): Promise<{
+declare type MetadataResult = {
   media: { '@ref': string; track: { [key: string]: string }[] };
-}> {
+};
+async function acquireMetadata(pathname: string): Promise<MetadataResult> {
   let buffer: Uint8Array | null = null;
   let fileHandle: fs.FileHandle | null = null;
-  let fileSize: number = 0;
+  let fileSize = 0;
 
   const readChunk = async (size: number, offset: number) => {
     if (!buffer || buffer.length !== size) {
@@ -230,7 +221,10 @@ async function acquireMetadata(
   try {
     fileHandle = await fs.open(pathname, 'r');
     fileSize = (await fileHandle.stat()).size;
-    return (await mediainfo!.analyzeData(() => fileSize, readChunk)) as any;
+    return ((await mediainfo!.analyzeData(
+      () => fileSize,
+      readChunk,
+    )) as any) as MetadataResult;
   } catch (err) {
     throw err;
   } finally {
@@ -240,9 +234,11 @@ async function acquireMetadata(
   }
 }
 
-export const fromFileAsync: mdAcquireAsync = async (pathname: string) => {
+export const fromFileAsync: MDAcquireAsync = async (pathname: string) => {
   if (!mediainfo) {
-    mediainfo = (await MediaInfoFactory({ format: 'object' })) as any;
+    mediainfo = ((await MediaInfoFactory({
+      format: 'object',
+    })) as any) as MediaInfo;
   }
   const result = await acquireMetadata(pathname);
   return fromFileFinish(result);
@@ -250,14 +246,14 @@ export const fromFileAsync: mdAcquireAsync = async (pathname: string) => {
 
 export function FullFromObj(
   file: string,
-  data: attributes,
+  data: Attributes,
 ): FullMetadata | void {
   const res: FullMetadata = {
-    OriginalPath: file,
-    Artist: '',
-    Album: '',
-    Track: 0,
-    Title: '',
+    originalPath: file,
+    artist: '',
+    album: '',
+    track: 0,
+    title: '',
   };
   /*    Year?: 0,
     VAType?: 'va',
@@ -278,32 +274,32 @@ export function FullFromObj(
     ? data.albumArtist
     : data.artist;
   const artistArray = getArtists(theArtist);
-  res.Artist = artistArray.length > 1 ? artistArray : theArtist;
-  res.Album = data.album;
-  res.Track = Number.parseInt(data.track, 10);
+  res.artist = artistArray.length > 1 ? artistArray : theArtist;
+  res.album = data.album;
+  res.track = Number.parseInt(data.track, 10);
   const { title, artists } = pullArtistsFromTitle(data.title);
-  res.Title = title;
-  res.MoreArtists = artists;
+  res.title = title;
+  res.moreArtists = artists;
 
   // Now add any additional data we've got
   if (hasStr('year', data)) {
-    res.Year = Number.parseInt(data.year, 10);
+    res.year = Number.parseInt(data.year, 10);
   }
   if (hasStr('artist', data) && hasStr('albumArtist', data)) {
-    if (data.artist !== data.albumArtist && res.MoreArtists) {
-      res.MoreArtists.push(data.artist);
+    if (data.artist !== data.albumArtist && res.moreArtists) {
+      res.moreArtists.push(data.artist);
     }
   }
-  if (hasStr('moreArtists', data) && res.MoreArtists) {
-    res.MoreArtists = [...res.MoreArtists, ...data.moreArtists];
-  } else if (res.MoreArtists && res.MoreArtists.length === 0) {
-    delete res.MoreArtists;
+  if (hasStr('moreArtists', data) && res.moreArtists) {
+    res.moreArtists = [...res.moreArtists, ...data.moreArtists];
+  } else if (res.moreArtists && res.moreArtists.length === 0) {
+    delete res.moreArtists;
   }
   if (hasStr('compilation', data)) {
     if (data.compilation === 'va') {
-      res.VAType = 'va';
+      res.vaType = 'va';
     } else if (data.compilation === 'ost') {
-      res.VAType = 'ost';
+      res.vaType = 'ost';
     }
   }
   return res;
