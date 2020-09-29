@@ -14,11 +14,17 @@ import type {
 
 let mediainfo: MediaInfo | null = null;
 
-const hasStr = <K extends string>(key: K, x: any): x is { [k in K]: string } =>
-  key in x && typeof x.key === 'string';
+function has<K extends string>(key: K, x: any): x is { [key in K]: unknown } {
+  return key in x;
+}
 
-const hasObj = <K extends string>(key: K, x: any): x is { [k in K]: string } =>
-  key in x && typeof x.key === 'object';
+function hasStr<K extends string>(key: K, x: any): x is { [key in K]: string } {
+  return has(key, x) && typeof x[key] === 'string';
+}
+
+function hasObj<K extends string>(key: K, x: any): x is { [key in K]: string } {
+  return has(key, x) && typeof x[key] === 'object';
+}
 
 let cwd: string = process.cwd();
 
