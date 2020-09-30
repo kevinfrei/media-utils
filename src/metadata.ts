@@ -14,6 +14,14 @@ import type {
 
 let mediainfo: MediaInfo | null = null;
 
+async function getMediaInfo() {
+  if (!mediainfo) {
+    mediainfo = ((await MediaInfoFactory({
+      format: 'object',
+    })) as any) as MediaInfo;
+  }
+}
+
 // eslint-disable-next-line no-shadow
 function has<K extends string>(key: K, x: any): x is { [key in K]: unknown } {
   return key in x;
@@ -206,6 +214,7 @@ const fromFileFinish = (res: {
 declare type MetadataResult = {
   media: { '@ref': string; track: { [key: string]: string }[] };
 };
+
 async function acquireMetadata(pathname: string): Promise<MetadataResult> {
   let buffer: Uint8Array | null = null;
   let fileHandle: fs.FileHandle | null = null;
@@ -234,12 +243,16 @@ async function acquireMetadata(pathname: string): Promise<MetadataResult> {
   }
 }
 
+export async function RawMetadata(
+  pathname: string,
+): Promise<{ [key: string]: string }[]> {
+  await getMediaInfo();
+  const res = await acquireMetadata(pathname);
+  return res.media.track;
+}
+
 export const fromFileAsync: MDAcquireAsync = async (pathname: string) => {
-  if (!mediainfo) {
-    mediainfo = ((await MediaInfoFactory({
-      format: 'object',
-    })) as any) as MediaInfo;
-  }
+  await getMediaInfo();
   const result = await acquireMetadata(pathname);
   return fromFileFinish(result);
 };

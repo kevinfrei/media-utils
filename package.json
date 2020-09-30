@@ -1,6 +1,6 @@
 {
   "name": "@freik/media-utils",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "description": "Utilities for dealing with media files",
   "main": "./lib/index.js",
   "types": "./lib/index.d.ts",
@@ -23,6 +23,7 @@
   "dependencies": {
     "@freik/core-utils": "^0.4.2",
     "@freik/node-utils": "^0.2.5",
+    "eslint": "^7.10.0",
     "mediainfo.js": "^0.1.4"
   },
   "husky": {
