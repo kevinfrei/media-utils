@@ -1,4 +1,4 @@
-import { FTONData } from '@freik/core-utils';
+import { FTONData, ObjUtil } from '@freik/core-utils';
 import { promises as fs } from 'fs';
 import type { MediaInfo } from 'mediainfo.js';
 import MediaInfoFactory from 'mediainfo.js';
@@ -20,16 +20,6 @@ async function getMediaInfo() {
       format: 'object',
     })) as any) as MediaInfo;
   }
-}
-
-// eslint-disable-next-line no-shadow
-function has<K extends string>(key: K, x: any): x is { [key in K]: unknown } {
-  return key in x;
-}
-
-// eslint-disable-next-line no-shadow
-function hasStr<K extends string>(key: K, x: any): x is { [key in K]: string } {
-  return has(key, x) && typeof x[key] === 'string';
 }
 
 const patterns: RegexPattern[] = [
@@ -116,7 +106,7 @@ export const fromPath: MDAcquire = (pthnm) => {
     const result: { [key: string]: string } = {};
     // Comment syntax because otherwise it confuses syntax highlighting :/
     for (const attr in pattern.metadata) {
-      if (pattern.metadata.hasOwnProperty(attr)) {
+      if (ObjUtil.has(attr, pattern.metadata)) {
         const index = pattern.metadata[attr];
         result[attr] = match[index];
       }
@@ -159,59 +149,7 @@ function checkVa(split: string[]): [artist: string, vatype?: 'ost' | 'va'] {
   return [split.join(' / ')];
 }
 
-const fromFileFinish = (res: {
-  media: {
-    '@ref': string;
-    track: FTONData[];
-  };
-}): SimpleMetadata | void => {
-  const metadata: FTONData = res.media.track[0];
-  // Requirements: Album, Artist, Track, Title
-  if (
-    !metadata ||
-    !hasStr('Title', metadata) ||
-    !hasStr('Track_Position', metadata) ||
-    !hasStr('Performer', metadata) ||
-    !hasStr('Album', metadata)
-  ) {
-    return;
-  }
-  const title = metadata.Title.trim();
-  const track = metadata.Track_Position.trim();
-  const album = metadata.Album.trim();
-  let artist = metadata.Performer.trim();
-  let albumPerformer = hasStr('Album_Performer', metadata)
-    ? metadata.Album_Performer.trim()
-    : '';
-  const year = hasStr('Recorded_Date', metadata)
-    ? metadata.Recorded_Date.trim()
-    : undefined;
-
-  // There's some weirdnes WRT %Performer% sometimes...
-  const asplit = artist.split(' / ');
-  const psplit = albumPerformer?.split(' / ');
-
-  if (asplit.length === 2 && asplit[0].trim() === asplit[1].trim()) {
-    artist = asplit[0].trim();
-  }
-
-  const [updateArtist, acomp] = checkVa(asplit);
-  artist = updateArtist;
-  const [updateAlbumPerformer, pcomp] = checkVa(psplit);
-  albumPerformer = updateAlbumPerformer;
-  const compilation = acomp ?? pcomp;
-  if (compilation && year) {
-    return { artist, album, year, track, title, compilation };
-  } else if (compilation) {
-    return { artist, album, track, title, compilation };
-  } else if (year) {
-    return { artist, album, track, title, year };
-  } else {
-    return { artist, album, track, title };
-  }
-};
-
-declare type MetadataResult = {
+export declare type MetadataResult = {
   media: { '@ref': string; track: { [key: string]: string }[] };
 };
 
@@ -254,7 +192,42 @@ export async function RawMetadata(
 export const fromFileAsync: MDAcquireAsync = async (pathname: string) => {
   await getMediaInfo();
   const result = await acquireMetadata(pathname);
-  return fromFileFinish(result);
+  const metadata: FTONData = result.media.track[0];
+  // Requirements: Album, Artist, Track, Title
+  if (
+    !metadata ||
+    !ObjUtil.hasStr('Title', metadata) ||
+    !ObjUtil.hasStr('Track_Position', metadata) ||
+    !ObjUtil.hasStr('Performer', metadata) ||
+    !ObjUtil.hasStr('Album', metadata)
+  ) {
+    return;
+  }
+  const title = metadata.Title.trim();
+  const track = metadata.Track_Position.trim();
+  const album = metadata.Album.trim();
+  let artist = metadata.Performer.trim();
+  let albumPerformer = ObjUtil.hasStr('Album_Performer', metadata)
+    ? metadata.Album_Performer.trim()
+    : '';
+  const year = ObjUtil.hasStr('Recorded_Date', metadata)
+    ? metadata.Recorded_Date.trim()
+    : undefined;
+
+  // There's some weirdnes WRT %Performer% sometimes...
+  const asplit = artist.split(' / ');
+  const psplit = albumPerformer?.split(' / ');
+
+  if (asplit.length === 2 && asplit[0].trim() === asplit[1].trim()) {
+    artist = asplit[0].trim();
+  }
+
+  const [updateArtist, acomp] = checkVa(asplit);
+  artist = updateArtist;
+  const [updateAlbumPerformer, pcomp] = checkVa(psplit);
+  albumPerformer = updateAlbumPerformer;
+  const compilation = acomp ?? pcomp;
+  return { artist, album, year, track, title, compilation };
 };
 
 export function FullFromObj(
@@ -276,14 +249,14 @@ export function FullFromObj(
     DiskOf?: number
 */
   if (
-    !(hasStr('artist', data) || hasStr('albumArtist', data)) ||
-    !hasStr('album', data) ||
-    !hasStr('track', data) ||
-    !hasStr('title', data)
+    !(ObjUtil.hasStr('artist', data) || ObjUtil.hasStr('albumArtist', data)) ||
+    !ObjUtil.hasStr('album', data) ||
+    !ObjUtil.hasStr('track', data) ||
+    !ObjUtil.hasStr('title', data)
   ) {
     return;
   }
-  const theArtist = hasStr('albumArtist', data)
+  const theArtist = ObjUtil.hasStr('albumArtist', data)
     ? data.albumArtist
     : data.artist;
   const artistArray = getArtists(theArtist);
@@ -295,20 +268,20 @@ export function FullFromObj(
   res.moreArtists = artists;
 
   // Now add any additional data we've got
-  if (hasStr('year', data)) {
+  if (ObjUtil.hasStr('year', data)) {
     res.year = Number.parseInt(data.year, 10);
   }
-  if (hasStr('artist', data) && hasStr('albumArtist', data)) {
+  if (ObjUtil.hasStr('artist', data) && ObjUtil.hasStr('albumArtist', data)) {
     if (data.artist !== data.albumArtist && res.moreArtists) {
       res.moreArtists.push(data.artist);
     }
   }
-  if (hasStr('moreArtists', data) && res.moreArtists) {
+  if (ObjUtil.hasStr('moreArtists', data) && res.moreArtists) {
     res.moreArtists = [...res.moreArtists, ...data.moreArtists];
   } else if (res.moreArtists && res.moreArtists.length === 0) {
     delete res.moreArtists;
   }
-  if (hasStr('compilation', data)) {
+  if (ObjUtil.hasStr('compilation', data)) {
     if (data.compilation === 'va') {
       res.vaType = 'va';
     } else if (data.compilation === 'ost') {
