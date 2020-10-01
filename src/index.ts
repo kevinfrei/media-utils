@@ -1,6 +1,7 @@
 import * as Decode from './decode';
 import * as Encode from './encode';
 import * as Metadata from './metadata';
+import * as Cover from './cover';
 
 // My "schema" for music that I use in other places:
 export type SongKey = string;
@@ -115,6 +116,11 @@ export type EncoderAsync = (
   attrs?: Attributes,
 ) => Promise<boolean>;
 
+export type MimeData = {
+  type: string;
+  data: string;
+};
+
 export {
   Encode,
   Encode as Encoders,
@@ -122,4 +128,6 @@ export {
   Decode as Decoders,
   Metadata,
   Metadata as MD,
+  Cover,
+  Cover as Covers,
 };

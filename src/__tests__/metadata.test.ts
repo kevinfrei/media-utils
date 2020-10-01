@@ -2,7 +2,7 @@ import { Attributes, Metadata } from '../index';
 const log = false ? console.log : (a: unknown) => {};
 
 it('From an mp3 file, Async', async () => {
-  const filename = '01-quiet.mp3';
+  const filename = 'src/__tests__/01-quiet.mp3';
   const md = await Metadata.fromFileAsync(filename);
   expect(md).toEqual({
     artist: 'The Artist',
@@ -24,7 +24,7 @@ it('From an mp3 file, Async', async () => {
   });
 });
 it('From an m4a file, Async', async () => {
-  const filename = '01-quiet.m4a';
+  const filename = 'src/__tests__/01-quiet.m4a';
   const md = await Metadata.fromFileAsync(filename);
   expect(md).toEqual({
     artist: 'The Artist',
@@ -46,7 +46,7 @@ it('From an m4a file, Async', async () => {
   });
 });
 it('From a flac file, Async', async () => {
-  const filename = '01-quiet.flac';
+  const filename = 'src/__tests__/01-quiet.flac';
   const md = await Metadata.fromFileAsync(filename);
   expect(md).toEqual({
     artist: 'The Artist',
