@@ -21,8 +21,8 @@
   "author": "Kevin Frei (kevinfrei@hotmail.com)",
   "license": "MIT",
   "dependencies": {
-    "@freik/core-utils": "^0.5.0",
-    "@freik/node-utils": "^0.2.6",
+    "@freik/core-utils": "^0.5.1",
+    "@freik/node-utils": "^0.2.7",
     "mediainfo.js": "^0.1.4"
   },
   "husky": {
