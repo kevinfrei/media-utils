@@ -2,7 +2,7 @@ import { ObjUtil } from '@freik/core-utils';
 import { promises as fs } from 'fs';
 import type { MediaInfo } from 'mediainfo.js';
 import MediaInfoFactory from 'mediainfo.js';
-import { MimeData } from '.';
+import { MimeData } from './index';
 import { MetadataResult } from './metadata';
 
 let mediainfo: MediaInfo | null = null;
