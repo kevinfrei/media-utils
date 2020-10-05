@@ -31,7 +31,7 @@ export type Album = {
   year: number;
   title: string;
   vatype: '' | 'va' | 'ost';
-  primaryArtists: Set<ArtistKey>;
+  primaryArtists: ArtistKey[];
   songs: SongKey[];
 };
 
