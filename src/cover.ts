@@ -6,7 +6,7 @@ import { MimeData } from './index';
 import { MetadataResult } from './metadata';
 
 let mediainfo: MediaInfo | null = null;
-
+let freeMediaInfoObjTimeout: NodeJS.Timeout | number | null = null;
 async function getMediaInfo(): Promise<void> {
   if (!mediainfo) {
     mediainfo = ((await MediaInfoFactory({
@@ -14,6 +14,11 @@ async function getMediaInfo(): Promise<void> {
       format: 'object',
     })) as any) as MediaInfo;
   }
+  // Have a timeout get rid of the object after 60 seconds of no use
+  if (freeMediaInfoObjTimeout !== null) {
+    clearTimeout(freeMediaInfoObjTimeout as number);
+  }
+  freeMediaInfoObjTimeout = setTimeout(() => (mediainfo = null), 60000);
 }
 
 async function acquireMetadata(pathname: string): Promise<MetadataResult> {

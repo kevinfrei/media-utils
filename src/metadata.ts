@@ -135,7 +135,7 @@ export const fromPath: MDAcquire = (pthnm) => {
   }
 };
 
-function checkVa(split: string[]): [artist: string, vatype?: 'ost' | 'va'] {
+function checkVa(split: string[]): [string] | [string, 'ost' | 'va'] {
   if (split.length > 1) {
     if (split[0].toLowerCase().indexOf('various artists') === 0) {
       const [, ...theSplit] = split;
@@ -183,16 +183,14 @@ async function acquireMetadata(pathname: string): Promise<MetadataResult> {
 
 export async function RawMetadata(
   pathname: string,
-): Promise<{ [key: string]: string }[]> {
+): Promise<{ [key: string]: FTONData }[]> {
   await getMediaInfo();
   const res = await acquireMetadata(pathname);
   return res.media.track;
 }
 
 export const fromFileAsync: MDAcquireAsync = async (pathname: string) => {
-  await getMediaInfo();
-  const result = await acquireMetadata(pathname);
-  const metadata: FTONData = result.media.track[0];
+  const metadata = (await RawMetadata(pathname))[0];
   // Requirements: Album, Artist, Track, Title
   if (
     !metadata ||
@@ -241,12 +239,12 @@ export function FullFromObj(
     track: 0,
     title: '',
   };
-  /*    Year?: 0,
-    VAType?: 'va',
-    MoreArtists?: string[],
-    Mix?: string[],
-    Disk?: number,
-    DiskOf?: number
+  /*    year?: 0,
+    vaType?: 'va',
+    moreArtists?: string[],
+    mix?: string[],
+    disk?: number,
+    diskOf?: number
 */
   if (
     !(ObjUtil.hasStr('artist', data) || ObjUtil.hasStr('albumArtist', data)) ||
