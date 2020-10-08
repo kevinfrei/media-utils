@@ -23,7 +23,7 @@
   "dependencies": {
     "@freik/core-utils": "^0.6.0",
     "@freik/node-utils": "^0.2.8",
-    "mediainfo.js": "^0.1.4"
+    "music-metadata": "^7.4.0"
   },
   "husky": {
     "hooks": {

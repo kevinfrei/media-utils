@@ -8,7 +8,7 @@ it('From an mp3 file, Async', async () => {
     artist: 'The Artist',
     year: '2003',
     album: 'No Album',
-    track: '01',
+    track: '1',
     title: 'Silence [w- Other Artist]',
   });
   log(md);
@@ -52,7 +52,7 @@ it('From a flac file, Async', async () => {
     artist: 'The Artist',
     year: '2003',
     album: 'No Album',
-    track: '01',
+    track: '1',
     title: 'Silence [w- Other Artist]',
   });
   log(md);

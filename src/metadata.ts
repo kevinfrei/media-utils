@@ -1,7 +1,5 @@
-import { FTONData, ObjUtil } from '@freik/core-utils';
-import { promises as fs } from 'fs';
-import type { MediaInfo } from 'mediainfo.js';
-import MediaInfoFactory from 'mediainfo.js';
+import { FTON, FTONData, ObjUtil, Type } from '@freik/core-utils';
+import * as mm from 'music-metadata';
 import path from 'path';
 import type {
   Attributes,
@@ -11,16 +9,6 @@ import type {
   RegexPattern,
   SimpleMetadata,
 } from './index';
-
-let mediainfo: MediaInfo | null = null;
-
-async function getMediaInfo() {
-  if (!mediainfo) {
-    mediainfo = ((await MediaInfoFactory({
-      format: 'object',
-    })) as any) as MediaInfo;
-  }
-}
 
 const patterns: RegexPattern[] = [
   {
@@ -153,64 +141,51 @@ export declare type MetadataResult = {
   media: { '@ref': string; track: { [key: string]: string }[] };
 };
 
-async function acquireMetadata(pathname: string): Promise<MetadataResult> {
-  let buffer: Uint8Array | null = null;
-  let fileHandle: fs.FileHandle | null = null;
-  let fileSize = 0;
-
-  const readChunk = async (size: number, offset: number) => {
-    if (!buffer || buffer.length !== size) {
-      buffer = new Uint8Array(size);
-    }
-    await fileHandle!.read(buffer, 0, size, offset);
-    return buffer;
-  };
-  try {
-    fileHandle = await fs.open(pathname, 'r');
-    fileSize = (await fileHandle.stat()).size;
-    return ((await mediainfo!.analyzeData(
-      () => fileSize,
-      readChunk,
-    )) as any) as MetadataResult;
-  } catch (err) {
-    throw err;
-  } finally {
-    if (fileHandle) {
-      await fileHandle.close();
-    }
-  }
+async function acquireMetadata(pathname: string): Promise<mm.IAudioMetadata> {
+  return await mm.parseFile(pathname, { skipCovers: true });
 }
 
-export async function RawMetadata(
-  pathname: string,
-): Promise<{ [key: string]: FTONData }[]> {
-  await getMediaInfo();
-  const res = await acquireMetadata(pathname);
-  return res.media.track;
+export async function RawMetadata(pathname: string): Promise<FTONData> {
+  const md = await acquireMetadata(pathname);
+  return FTON.asFTON(md) || {};
+  /* return {
+    ...filterDown(res.common),
+    ...filterDown(res.format),
+    ...filterDown(res.native),
+    ...filterDown(res.quality),
+  };*/
 }
 
 export const fromFileAsync: MDAcquireAsync = async (pathname: string) => {
-  const metadata = (await RawMetadata(pathname))[0];
+  const allMetadata = await RawMetadata(pathname);
   // Requirements: Album, Artist, Track, Title
+  if (!ObjUtil.has('common', allMetadata)) {
+    return;
+  }
+  const metadata = allMetadata.common;
   if (
     !metadata ||
-    !ObjUtil.hasStr('Title', metadata) ||
-    !ObjUtil.hasStr('Track_Position', metadata) ||
-    !ObjUtil.hasStr('Performer', metadata) ||
-    !ObjUtil.hasStr('Album', metadata)
+    !ObjUtil.hasStr('title', metadata) ||
+    !ObjUtil.hasStr('album', metadata) ||
+    !ObjUtil.hasStr('artist', metadata) ||
+    !ObjUtil.has('track', metadata) ||
+    !ObjUtil.has('no', metadata.track) ||
+    !Type.isNumber(metadata.track.no)
   ) {
     return;
   }
-  const title = metadata.Title.trim();
-  const track = metadata.Track_Position.trim();
-  const album = metadata.Album.trim();
-  let artist = metadata.Performer.trim();
+  const title = metadata.title.trim();
+  const track = metadata.track.no.toString();
+  const album = metadata.album.trim();
+  let artist = metadata.artist.trim();
+  // TODO: This isn't configured for the new metadata module I've switched to
   let albumPerformer = ObjUtil.hasStr('Album_Performer', metadata)
     ? metadata.Album_Performer.trim()
     : '';
-  const year = ObjUtil.hasStr('Recorded_Date', metadata)
-    ? metadata.Recorded_Date.trim()
-    : undefined;
+  const year =
+    ObjUtil.has('year', metadata) && Type.isNumber(metadata.year)
+      ? metadata.year.toString()
+      : undefined;
 
   // There's some weirdnes WRT %Performer% sometimes...
   const asplit = artist.split(' / ');
@@ -225,7 +200,11 @@ export const fromFileAsync: MDAcquireAsync = async (pathname: string) => {
   const [updateAlbumPerformer, pcomp] = checkVa(psplit);
   albumPerformer = updateAlbumPerformer;
   const compilation = acomp ?? pcomp;
-  return { artist, album, year, track, title, compilation };
+  if (compilation) {
+    return { artist, album, year, track, title, compilation };
+  } else {
+    return { artist, album, year, track, title };
+  }
 };
 
 export function FullFromObj(
