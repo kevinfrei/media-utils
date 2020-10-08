@@ -147,13 +147,7 @@ async function acquireMetadata(pathname: string): Promise<mm.IAudioMetadata> {
 
 export async function RawMetadata(pathname: string): Promise<FTONData> {
   const md = await acquireMetadata(pathname);
-  return FTON.asFTON(md) || {};
-  /* return {
-    ...filterDown(res.common),
-    ...filterDown(res.format),
-    ...filterDown(res.native),
-    ...filterDown(res.quality),
-  };*/
+  return FTON.filter(md);
 }
 
 export const fromFileAsync: MDAcquireAsync = async (pathname: string) => {

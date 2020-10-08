@@ -1,3 +1,4 @@
+import { ObjUtil } from '@freik/core-utils';
 import { Attributes, Metadata } from '../index';
 const log = false ? console.log : (a: unknown) => {};
 
@@ -22,6 +23,11 @@ it('From an mp3 file, Async', async () => {
     title: 'Silence',
     moreArtists: ['Other Artist'],
   });
+  const rmd = await Metadata.RawMetadata(filename);
+  const hasComm = ObjUtil.has('common', rmd);
+  const hasForm = ObjUtil.has('format', rmd);
+  const hasNat = ObjUtil.has('native', rmd);
+  expect(hasComm && hasForm && hasNat).toBeTruthy();
 });
 it('From an m4a file, Async', async () => {
   const filename = 'src/__tests__/01-quiet.m4a';
@@ -44,6 +50,11 @@ it('From an m4a file, Async', async () => {
     title: 'Silence',
     moreArtists: ['Other Artist'],
   });
+  const rmd = await Metadata.RawMetadata(filename);
+  const hasComm = ObjUtil.has('common', rmd);
+  const hasForm = ObjUtil.has('format', rmd);
+  const hasNat = ObjUtil.has('native', rmd);
+  expect(hasComm && hasForm && hasNat).toBeTruthy();
 });
 it('From a flac file, Async', async () => {
   const filename = 'src/__tests__/01-quiet.flac';
@@ -66,6 +77,11 @@ it('From a flac file, Async', async () => {
     title: 'Silence',
     moreArtists: ['Other Artist'],
   });
+  const rmd = await Metadata.RawMetadata(filename);
+  const hasComm = ObjUtil.has('common', rmd);
+  const hasForm = ObjUtil.has('format', rmd);
+  const hasNat = ObjUtil.has('native', rmd);
+  expect(hasComm && hasForm && hasNat).toBeTruthy();
 });
 it('Generic path', () => {
   const filename = 'something/artist - 1983 - album/01 - title.m4a';
