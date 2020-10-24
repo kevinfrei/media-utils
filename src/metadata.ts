@@ -1,4 +1,4 @@
-import { FTON, FTONData, ObjUtil, Type } from '@freik/core-utils';
+import { FTON, FTONData, Type } from '@freik/core-utils';
 import * as mm from 'music-metadata';
 import path from 'path';
 import type {
@@ -94,7 +94,7 @@ export const fromPath: MDAcquire = (pthnm) => {
     const result: { [key: string]: string } = {};
     // Comment syntax because otherwise it confuses syntax highlighting :/
     for (const attr in pattern.metadata) {
-      if (ObjUtil.has(attr, pattern.metadata)) {
+      if (Type.has(pattern.metadata, attr)) {
         const index = pattern.metadata[attr];
         result[attr] = match[index];
       }
@@ -153,17 +153,17 @@ export async function RawMetadata(pathname: string): Promise<FTONData> {
 export const fromFileAsync: MDAcquireAsync = async (pathname: string) => {
   const allMetadata = await RawMetadata(pathname);
   // Requirements: Album, Artist, Track, Title
-  if (!ObjUtil.has('common', allMetadata)) {
+  if (!Type.has(allMetadata, 'common')) {
     return;
   }
   const metadata = allMetadata.common;
   if (
     !metadata ||
-    !ObjUtil.hasStr('title', metadata) ||
-    !ObjUtil.hasStr('album', metadata) ||
-    !ObjUtil.hasStr('artist', metadata) ||
-    !ObjUtil.has('track', metadata) ||
-    !ObjUtil.has('no', metadata.track) ||
+    !Type.hasStr(metadata, 'title') ||
+    !Type.hasStr(metadata, 'album') ||
+    !Type.hasStr(metadata, 'artist') ||
+    !Type.has(metadata, 'track') ||
+    !Type.has(metadata.track, 'no') ||
     !Type.isNumber(metadata.track.no)
   ) {
     return;
@@ -173,11 +173,11 @@ export const fromFileAsync: MDAcquireAsync = async (pathname: string) => {
   const album = metadata.album.trim();
   let artist = metadata.artist.trim();
   // TODO: This isn't configured for the new metadata module I've switched to
-  let albumPerformer = ObjUtil.hasStr('Album_Performer', metadata)
+  let albumPerformer = Type.hasStr(metadata, 'Album_Performer')
     ? metadata.Album_Performer.trim()
     : '';
   const year =
-    ObjUtil.has('year', metadata) && Type.isNumber(metadata.year)
+    Type.has(metadata, 'year') && Type.isNumber(metadata.year)
       ? metadata.year.toString()
       : undefined;
 
@@ -220,14 +220,14 @@ export function FullFromObj(
     diskOf?: number
 */
   if (
-    !(ObjUtil.hasStr('artist', data) || ObjUtil.hasStr('albumArtist', data)) ||
-    !ObjUtil.hasStr('album', data) ||
-    !ObjUtil.hasStr('track', data) ||
-    !ObjUtil.hasStr('title', data)
+    !(Type.hasStr(data, 'artist') || Type.hasStr(data, 'albumArtist')) ||
+    !Type.hasStr(data, 'album') ||
+    !Type.hasStr(data, 'track') ||
+    !Type.hasStr(data, 'title')
   ) {
     return;
   }
-  const theArtist = ObjUtil.hasStr('albumArtist', data)
+  const theArtist = Type.hasStr(data, 'albumArtist')
     ? data.albumArtist
     : data.artist;
   const artistArray = getArtists(theArtist);
@@ -239,20 +239,20 @@ export function FullFromObj(
   res.moreArtists = artists;
 
   // Now add any additional data we've got
-  if (ObjUtil.hasStr('year', data)) {
+  if (Type.hasStr(data, 'year')) {
     res.year = Number.parseInt(data.year, 10);
   }
-  if (ObjUtil.hasStr('artist', data) && ObjUtil.hasStr('albumArtist', data)) {
+  if (Type.hasStr(data, 'artist') && Type.hasStr(data, 'albumArtist')) {
     if (data.artist !== data.albumArtist && res.moreArtists) {
       res.moreArtists.push(data.artist);
     }
   }
-  if (ObjUtil.hasStr('moreArtists', data) && res.moreArtists) {
+  if (Type.hasStr(data, 'moreArtists') && res.moreArtists) {
     res.moreArtists = [...res.moreArtists, ...data.moreArtists];
   } else if (res.moreArtists && res.moreArtists.length === 0) {
     delete res.moreArtists;
   }
-  if (ObjUtil.hasStr('compilation', data)) {
+  if (Type.hasStr(data, 'compilation')) {
     if (data.compilation === 'va') {
       res.vaType = 'va';
     } else if (data.compilation === 'ost') {
