@@ -1,6 +1,6 @@
 {
   "name": "@freik/media-utils",
-  "version": "0.5.1",
+  "version": "0.5.2",
   "description": "Utilities for dealing with media files",
   "main": "./lib/index.js",
   "types": "./lib/index.d.ts",
@@ -21,9 +21,9 @@
   "author": "Kevin Frei (kevinfrei@hotmail.com)",
   "license": "MIT",
   "dependencies": {
-    "@freik/core-utils": "^0.6.6",
-    "@freik/node-utils": "^0.3.1",
-    "music-metadata": "^7.4.1"
+    "@freik/core-utils": "^0.7.0",
+    "@freik/node-utils": "^0.3.2",
+    "music-metadata": "^7.5.0"
   },
   "husky": {
     "hooks": {
