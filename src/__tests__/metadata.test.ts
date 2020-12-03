@@ -286,3 +286,74 @@ it('Soundtrack, other artist', () => {
     vaType: 'ost',
   });
 });
+it('variation', () => {
+  const filename =
+    'something/artist - 2001 - album/02 - title [live][goofy remix].m4a';
+  const md = Metadata.fromPath(filename);
+  expect(md).toEqual({
+    artist: 'artist',
+    year: '2001',
+    album: 'album',
+    track: '02',
+    title: 'title [live][goofy remix]',
+  });
+  log(md);
+  const fmd = Metadata.FullFromObj(filename, (md as unknown) as Attributes);
+  expect(fmd).toEqual({
+    originalPath: filename,
+    artist: 'artist',
+    year: 2001,
+    album: 'album',
+    track: 2,
+    title: 'title',
+    variations: ['live', 'goofy remix'],
+  });
+});
+it('variation with additional artist', () => {
+  const filename =
+    'something/artist - 2001 - album/02 - title [live][goofy remix] [feat- foobar].m4a';
+  const md = Metadata.fromPath(filename);
+  expect(md).toEqual({
+    artist: 'artist',
+    year: '2001',
+    album: 'album',
+    track: '02',
+    title: 'title [live][goofy remix] [feat- foobar]',
+  });
+  log(md);
+  const fmd = Metadata.FullFromObj(filename, (md as unknown) as Attributes);
+  expect(fmd).toEqual({
+    originalPath: filename,
+    artist: 'artist',
+    year: 2001,
+    album: 'album',
+    track: 2,
+    title: 'title',
+    moreArtists: ['foobar'],
+    variations: ['live', 'goofy remix'],
+  });
+});
+it('variation with additional artist and spaces', () => {
+  const filename =
+    'something/artist - 2001 - album/02 - title  [live]  [feat- foobar]  [goofy remix] .flac';
+  const md = Metadata.fromPath(filename);
+  expect(md).toEqual({
+    artist: 'artist',
+    year: '2001',
+    album: 'album',
+    track: '02',
+    title: 'title  [live]  [feat- foobar]  [goofy remix] ',
+  });
+  log(md);
+  const fmd = Metadata.FullFromObj(filename, (md as unknown) as Attributes);
+  expect(fmd).toEqual({
+    originalPath: filename,
+    artist: 'artist',
+    year: 2001,
+    album: 'album',
+    track: 2,
+    title: 'title',
+    moreArtists: ['foobar'],
+    variations: ['live', 'goofy remix'],
+  });
+});

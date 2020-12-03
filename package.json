@@ -32,7 +32,8 @@
     }
   },
   "devDependencies": {
-    "@freik/ts-tooling": "^0.0.2"
+    "@freik/ts-tooling": "^0.1.0",
+    "prettier": "^2.2.1"
   },
   "jest": {
     "setupFilesAfterEnv": [

@@ -64,9 +64,8 @@ export type FullMetadata = {
   title: string;
   vaType?: 'va' | 'ost';
   moreArtists?: string[];
-  mix?: string[];
+  variations?: string[];
   disk?: number;
-  diskOf?: number;
 };
 
 // This is a general mechanism for describing how to extract
@@ -82,14 +81,6 @@ export type RegexPattern = {
   // and their corresponding RegExp capture numbers
   metadata: { [key: string]: number };
 };
-
-// A function type for metadata acquisition
-export type MDAcquire = (pathname: string) => SimpleMetadata | void;
-
-// Same thing, but async...
-export type MDAcquireAsync = (
-  pathname: string,
-) => Promise<SimpleMetadata | void>;
 
 // A function type for decoding audio
 export type Decoder = (inputFile: string, outputFile: string) => boolean;

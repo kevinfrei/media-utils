@@ -4,8 +4,6 @@ import path from 'path';
 import type {
   Attributes,
   FullMetadata,
-  MDAcquire,
-  MDAcquireAsync,
   RegexPattern,
   SimpleMetadata,
 } from './index';
@@ -41,28 +39,52 @@ const patterns: RegexPattern[] = [
   },
 ];
 
-const moreArtistsRE = /\[(?:(?:w-)|(?:feat-)|(?:with)|(?:featuring)) (.*)\]/i;
-const getArtists = (artists: string): string[] => {
+const moreArtistsRE = /\[(?:(?:w-)|(?:feat-)|(?:with)|(?:featuring)) ([^\]]*)\]/i;
+const variationRE = /\[([^\]]+)\]/;
+
+function getArtists(artists: string): string[] {
   if (artists.indexOf(' & ') >= 0) {
-    return artists.split(', ').join(' & ').split(' & ');
+    return artists
+      .split(', ')
+      .join(' & ')
+      .split(' & ')
+      .map((s) => s.trim());
   } else {
     return [artists];
   }
-};
+}
 
 // This should pull the [w- Someone & Somebody else] from the title, and
 // stick it in the artists array
-const pullArtistsFromTitle = (
+function pullArtistsFromTitle(
   title: string,
-): { title: string; artists: string[] } => {
+): { title: string; artists?: string[] } {
   const match = moreArtistsRE.exec(title);
   if (!match) {
-    return { title, artists: [] };
+    return { title: title.replace(/  +/g, ' ').trim() };
   }
   const artists = getArtists(match[1]);
-  title = title.replace(moreArtistsRE, '').trim();
+  title = title.replace(moreArtistsRE, '').replace(/  +/g, ' ').trim();
   return { title, artists };
-};
+}
+
+function pullVariationsFromTitle(
+  title: string,
+): { title: string; variations?: string[] } {
+  let variations: string[] | undefined;
+  let ttl = title;
+  while (true) {
+    const match = variationRE.exec(ttl);
+    if (!match) {
+      return { title: ttl, variations };
+    }
+    if (variations === undefined) {
+      variations = [];
+    }
+    variations.push(match[1]);
+    ttl = ttl.replace(variationRE, '').replace(/  +/g, ' ').trim();
+  }
+}
 
 export function addPattern(
   rgx: RegExp,
@@ -76,7 +98,7 @@ export function addPattern(
   }
 }
 
-export const fromPath: MDAcquire = (pthnm) => {
+export function fromPath(pthnm: string): SimpleMetadata | void {
   let pathname = pthnm.replace(/\\/g, '/');
 
   // A little helper
@@ -121,7 +143,7 @@ export const fromPath: MDAcquire = (pthnm) => {
       return (result as unknown) as SimpleMetadata;
     }
   }
-};
+}
 
 function checkVa(split: string[]): [string] | [string, 'ost' | 'va'] {
   if (split.length > 1) {
@@ -150,7 +172,9 @@ export async function RawMetadata(pathname: string): Promise<FTONData> {
   return FTON.filter(md);
 }
 
-export const fromFileAsync: MDAcquireAsync = async (pathname: string) => {
+export async function fromFileAsync(
+  pathname: string,
+): Promise<SimpleMetadata | void> {
   const allMetadata = await RawMetadata(pathname);
   // Requirements: Album, Artist, Track, Title
   if (!Type.has(allMetadata, 'common')) {
@@ -199,7 +223,7 @@ export const fromFileAsync: MDAcquireAsync = async (pathname: string) => {
   } else {
     return { artist, album, year, track, title };
   }
-};
+}
 
 export function FullFromObj(
   file: string,
@@ -212,13 +236,12 @@ export function FullFromObj(
     track: 0,
     title: '',
   };
-  /*    year?: 0,
-    vaType?: 'va',
+  /*
     moreArtists?: string[],
-    mix?: string[],
     disk?: number,
-    diskOf?: number
-*/
+    variation?: string[]
+    TODO: Deal with variations (mix, live, remix, demo, etc...)
+  */
   if (
     !(Type.hasStr(data, 'artist') || Type.hasStr(data, 'albumArtist')) ||
     !Type.hasStr(data, 'album') ||
@@ -233,10 +256,16 @@ export function FullFromObj(
   const artistArray = getArtists(theArtist);
   res.artist = artistArray.length > 1 ? artistArray : theArtist;
   res.album = data.album;
-  res.track = Number.parseInt(data.track, 10);
-  const { title, artists } = pullArtistsFromTitle(data.title);
-  res.title = title;
+  const track = Number.parseInt(data.track, 10);
+  res.track = track % 100;
+  if (res.track !== track) {
+    res.disk = Math.floor(track / 100);
+  }
+  const { title: aTitle, artists } = pullArtistsFromTitle(data.title);
   res.moreArtists = artists;
+  const { title, variations } = pullVariationsFromTitle(aTitle);
+  res.title = title;
+  res.variations = variations;
 
   // Now add any additional data we've got
   if (Type.hasStr(data, 'year')) {
