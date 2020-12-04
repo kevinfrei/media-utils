@@ -29,6 +29,7 @@ it('From an mp3 file, Async', async () => {
   const hasNat = ObjUtil.has('native', rmd);
   expect(hasComm && hasForm && hasNat).toBeTruthy();
 });
+
 it('From an m4a file, Async', async () => {
   const filename = 'src/__tests__/01-quiet.m4a';
   const md = await Metadata.fromFileAsync(filename);
@@ -56,6 +57,7 @@ it('From an m4a file, Async', async () => {
   const hasNat = ObjUtil.has('native', rmd);
   expect(hasComm && hasForm && hasNat).toBeTruthy();
 });
+
 it('From a flac file, Async', async () => {
   const filename = 'src/__tests__/01-quiet.flac';
   const md = await Metadata.fromFileAsync(filename);
@@ -83,6 +85,7 @@ it('From a flac file, Async', async () => {
   const hasNat = ObjUtil.has('native', rmd);
   expect(hasComm && hasForm && hasNat).toBeTruthy();
 });
+
 it('Generic path', () => {
   const filename = 'something/artist - 1983 - album/01 - title.m4a';
   const md = Metadata.fromPath(filename);
@@ -104,6 +107,7 @@ it('Generic path', () => {
     title: 'title',
   });
 });
+
 it('Generic path, Two Primary artists', () => {
   const filename =
     'something/artist 1 & artist 2 - 1983 - album/01 - title.m4a';
@@ -126,6 +130,7 @@ it('Generic path, Two Primary artists', () => {
     title: 'title',
   });
 });
+
 it('Generic path, Multiple Primary artists', () => {
   const filename =
     'something/artist 1, artist 2, artist 3 & artist 4 - 1983 - album/01 - title.m4a';
@@ -148,6 +153,7 @@ it('Generic path, Multiple Primary artists', () => {
     title: 'title',
   });
 });
+
 it('Generic path, no year', () => {
   const filename = 'something/artist - album/01 - title.mp3';
   const md = Metadata.fromPath(filename);
@@ -167,6 +173,7 @@ it('Generic path, no year', () => {
     title: 'title',
   });
 });
+
 it('Generic path, other artist', () => {
   const filename =
     'something/artist - 1983 - album/02 - title [feat- Other Artist].aac';
@@ -190,6 +197,7 @@ it('Generic path, other artist', () => {
     moreArtists: ['Other Artist'],
   });
 });
+
 it('Generic path, 2 other artists', () => {
   const filename =
     'something/artist - 1983 - album/02 - title [feat- Other Artist 1 & Other Artist 2].aac';
@@ -213,6 +221,7 @@ it('Generic path, 2 other artists', () => {
     moreArtists: ['Other Artist 1', 'Other Artist 2'],
   });
 });
+
 it('Generic path, multiple other artists', () => {
   const filename =
     'something/artist - 1983 - album/02 - title [feat- Other Artist 1, Other Artist 2 & Other Artist 3].aac';
@@ -236,6 +245,7 @@ it('Generic path, multiple other artists', () => {
     moreArtists: ['Other Artist 1', 'Other Artist 2', 'Other Artist 3'],
   });
 });
+
 it('VA, other artist', () => {
   const filename =
     'something/VA - 1983 - album/02 - artist - title [with Other Artist].flac';
@@ -261,6 +271,7 @@ it('VA, other artist', () => {
     vaType: 'va',
   });
 });
+
 it('Soundtrack, other artist', () => {
   const filename =
     'something/Soundtrack - 2001 - album/02 - artist - title [featuring Other Artist].m4a';
@@ -286,6 +297,7 @@ it('Soundtrack, other artist', () => {
     vaType: 'ost',
   });
 });
+
 it('variation', () => {
   const filename =
     'something/artist - 2001 - album/02 - title [live][goofy remix].m4a';
@@ -309,6 +321,7 @@ it('variation', () => {
     variations: ['live', 'goofy remix'],
   });
 });
+
 it('variation with additional artist', () => {
   const filename =
     'something/artist - 2001 - album/02 - title [live][goofy remix] [feat- foobar].m4a';
@@ -333,6 +346,7 @@ it('variation with additional artist', () => {
     variations: ['live', 'goofy remix'],
   });
 });
+
 it('variation with additional artist and spaces', () => {
   const filename =
     'something/artist - 2001 - album/02 - title  [live]  [feat- foobar]  [goofy remix] .flac';
@@ -356,4 +370,16 @@ it('variation with additional artist and spaces', () => {
     moreArtists: ['foobar'],
     variations: ['live', 'goofy remix'],
   });
+});
+
+it('Artist Splitting', () => {
+  const art1 = 'Artist #1 & Artist #2';
+  const spl1 = Metadata.splitArtistString(art1);
+  expect(spl1).toEqual(['Artist #1', 'Artist #2']);
+  const art2 = 'Artist 1, Artist 2 & Artist 3';
+  const spl2 = Metadata.splitArtistString(art2);
+  expect(spl2).toEqual(['Artist 1', 'Artist 2', 'Artist 3']);
+  const art3 = 'Artist 1, Artist 2';
+  const spl3 = Metadata.splitArtistString(art3);
+  expect(spl3).toEqual([art3]);
 });

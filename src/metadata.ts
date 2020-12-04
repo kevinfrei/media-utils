@@ -42,7 +42,7 @@ const patterns: RegexPattern[] = [
 const moreArtistsRE = /\[(?:(?:w-)|(?:feat-)|(?:with)|(?:featuring)) ([^\]]*)\]/i;
 const variationRE = /\[([^\]]+)\]/;
 
-function getArtists(artists: string): string[] {
+export function splitArtistString(artists: string): string[] {
   if (artists.indexOf(' & ') >= 0) {
     return artists
       .split(', ')
@@ -63,7 +63,7 @@ function pullArtistsFromTitle(
   if (!match) {
     return { title: title.replace(/  +/g, ' ').trim() };
   }
-  const artists = getArtists(match[1]);
+  const artists = splitArtistString(match[1]);
   title = title.replace(moreArtistsRE, '').replace(/  +/g, ' ').trim();
   return { title, artists };
 }
@@ -253,7 +253,7 @@ export function FullFromObj(
   const theArtist = Type.hasStr(data, 'albumArtist')
     ? data.albumArtist
     : data.artist;
-  const artistArray = getArtists(theArtist);
+  const artistArray = splitArtistString(theArtist);
   res.artist = artistArray.length > 1 ? artistArray : theArtist;
   res.album = data.album;
   const track = Number.parseInt(data.track, 10);
