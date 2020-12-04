@@ -17,6 +17,7 @@ export type Song = {
   albumId: AlbumKey;
   artistIds: ArtistKey[];
   secondaryIds: ArtistKey[];
+  variations?: string[];
 };
 
 export type Artist = {
