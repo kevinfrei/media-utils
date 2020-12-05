@@ -1,7 +1,10 @@
 import * as Decode from './decode';
 import * as Encode from './encode';
-import * as Metadata from './metadata';
+import * as tmpMetadata from './metadata';
 import * as Cover from './cover';
+import * as WebSafe from './webSafe';
+
+const Metadata = { ...tmpMetadata, ...WebSafe };
 
 // My "schema" for music that I use in other places:
 export type SongKey = string;
@@ -122,4 +125,5 @@ export {
   Metadata as MD,
   Cover,
   Cover as Covers,
+  WebSafe,
 };
