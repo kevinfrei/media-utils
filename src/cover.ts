@@ -1,6 +1,6 @@
 import { promises as fs } from 'fs';
 import * as mm from 'music-metadata';
-import { MimeData } from './index';
+import { MimeData } from '@freik/core-utils';
 
 async function acquireMetadata(pathname: string): Promise<mm.IAudioMetadata> {
   return await mm.parseFile(pathname);

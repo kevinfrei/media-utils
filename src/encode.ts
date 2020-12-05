@@ -4,9 +4,9 @@
 // Everything is synchronous currently
 
 import { ProcUtil } from '@freik/node-utils';
-import { ObjUtil } from '@freik/core-utils';
+import { Attributes, ObjUtil, Type } from '@freik/core-utils';
 
-import type { Attributes, Encoder, EncoderAsync } from './index';
+import type { Encoder, EncoderAsync } from './index';
 
 const makeM4aArgs = (
   wavFile: string,
@@ -53,7 +53,7 @@ const makeFfmpegArgs = (
   }
   if (attrs) {
     for (const elem in attrs) {
-      if (attrs.hasOwnProperty(elem)) {
+      if (Type.hasStr(attrs, elem)) {
         args.push('-metadata');
         args.push(elem + '=' + attrs[elem]);
       }
@@ -98,11 +98,11 @@ const makeFlacArgs = (
     args = args.concat(ObjUtil.prefixObj('-', options));
   }
   if (attrs) {
-    if (attrs.hasOwnProperty('compilation')) {
+    if (Type.has(attrs, 'compilation')) {
       // There's no compilation tag that I know of.
       delete attrs.compilation;
     }
-    if (attrs.hasOwnProperty('track')) {
+    if (Type.isObject(attrs) && attrs.hasOwnProperty('track')) {
       const trnum = attrs.track;
       delete attrs.track;
       attrs.tracknumber = trnum;

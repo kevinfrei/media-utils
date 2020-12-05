@@ -1,5 +1,5 @@
-import { ObjUtil } from '@freik/core-utils';
-import { Attributes, Metadata } from '../index';
+import { ObjUtil, Attributes } from '@freik/core-utils';
+import { Metadata } from '../index';
 const log = false ? console.log : (a: unknown) => {};
 
 it('From an mp3 file, Async', async () => {
