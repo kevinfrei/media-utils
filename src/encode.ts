@@ -4,7 +4,7 @@
 // Everything is synchronous currently
 
 import { ProcUtil } from '@freik/node-utils';
-import { Attributes, ObjUtil, Type } from '@freik/core-utils';
+import { Attributes, ObjUtil, SimpleMetadata, Type } from '@freik/core-utils';
 
 import type { Encoder, EncoderAsync } from './index';
 
@@ -12,14 +12,14 @@ const makeM4aArgs = (
   wavFile: string,
   outputFilename: string,
   options?: Attributes,
-  attrs?: Attributes,
+  attrs?: Attributes | SimpleMetadata,
 ): string[] => {
   let args: string[] = ['-w', '-o', outputFilename];
   if (options) {
     args = args.concat(ObjUtil.prefixObj('-', options));
   }
   if (attrs) {
-    args = args.concat(ObjUtil.prefixObj('--', attrs));
+    args = args.concat(ObjUtil.prefixObj('--', attrs as Attributes));
   }
   args.push(wavFile);
   return args;
@@ -44,7 +44,7 @@ const makeFfmpegArgs = (
   inputFile: string,
   outputFilename: string,
   options?: Attributes,
-  attrs?: Attributes,
+  attrs?: Attributes | SimpleMetadata,
 ): string[] => {
   // plus '-c:a', 'aac', '-cutoff', '16000'  in some world
   let args: string[] = ['-i', inputFile, '-vn'];
@@ -82,7 +82,7 @@ const makeFlacArgs = (
   wavFile: string,
   outputFilename: string,
   options?: Attributes,
-  attrs?: Attributes,
+  attrs?: Attributes | SimpleMetadata,
 ): string[] => {
   let args: string[] = [
     '--best',
@@ -102,12 +102,13 @@ const makeFlacArgs = (
       // There's no compilation tag that I know of.
       delete attrs.compilation;
     }
-    if (Type.isObject(attrs) && attrs.hasOwnProperty('track')) {
-      const trnum = attrs.track;
-      delete attrs.track;
-      attrs.tracknumber = trnum;
+    const att = attrs as Attributes;
+    if (Type.isObject(att) && attrs.hasOwnProperty('track')) {
+      const trnum = att.track;
+      delete att.track;
+      att.tracknumber = trnum;
     }
-    const attrArray = ObjUtil.prefixObj('--tag=', attrs);
+    const attrArray = ObjUtil.prefixObj('--tag=', att);
     for (let i = 0; i < attrArray.length; i += 2) {
       args.push(attrArray[i] + '=' + attrArray[i + 1]);
     }

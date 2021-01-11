@@ -2,7 +2,11 @@ import * as Decode from './decode';
 import * as Encode from './encode';
 import * as metadata from './metadata';
 import * as Cover from './cover';
-import { Attributes, Media as WebSafe } from '@freik/core-utils';
+import {
+  Attributes,
+  Media as WebSafe,
+  SimpleMetadata,
+} from '@freik/core-utils';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 const Metadata = { ...metadata, ...WebSafe };
@@ -29,7 +33,7 @@ export type EncoderAsync = (
   wavFile: string,
   outputFilename: string,
   options?: Attributes,
-  attrs?: Attributes,
+  attrs?: Attributes | SimpleMetadata,
 ) => Promise<boolean>;
 
 export {
