@@ -7,7 +7,7 @@
   "scripts": {
     "test": "jest --config jestconfig.json",
     "build": "rimraf lib && tsc",
-    "prepare": "yarn run build",
+    "prepare": "yarn run build && minify -i lib",
     "prepublishOnly": "yarn test && yarn run lint",
     "format": "prettier --write \"src/**/*.ts\" \"*.md\" \"*.json\"",
     "lint": "yarn run eslint --fix --ext .ts src",
@@ -32,6 +32,7 @@
     }
   },
   "devDependencies": {
+    "@freik/build-tools": "^2.1.0",
     "@freik/ts-tooling": "^0.1.0",
     "prettier": "^2.2.1"
   },
