@@ -1,6 +1,6 @@
 {
   "name": "@freik/media-utils",
-  "version": "0.7.3",
+  "version": "0.7.4",
   "description": "Utilities for dealing with media files",
   "main": "./lib/index.js",
   "types": "./lib/index.d.ts",
@@ -13,7 +13,7 @@
     "lint": "yarn run eslint --fix --ext .ts src",
     "preversion": "yarn run lint",
     "version": "yarn run format && git add -A src",
-    "postversion": "git push && git push --tags",
+    "postversion": "git push && git push --tags --no-verify",
     "compile": "tsc --noEmit",
     "chk": "yarn run format && yarn run compile && yarn run lint && yarn test"
   },
@@ -34,7 +34,8 @@
   "devDependencies": {
     "@freik/build-tools": "^2.1.0",
     "@freik/ts-tooling": "^0.1.0",
-    "prettier": "^2.2.1"
+    "prettier": "^2.2.1",
+    "ts-jest": "^26.5.0"
   },
   "jest": {
     "setupFilesAfterEnv": [
