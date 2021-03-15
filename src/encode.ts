@@ -54,8 +54,9 @@ const makeFfmpegArgs = (
   if (attrs) {
     for (const elem in attrs) {
       if (Type.hasStr(attrs, elem)) {
+        const data: string = (attrs as any)[elem]; // eslint-disable-line
         args.push('-metadata');
-        args.push(elem + '=' + attrs[elem]);
+        args.push(elem + '=' + data);
       }
     }
   }
@@ -102,7 +103,7 @@ const makeFlacArgs = (
       // There's no compilation tag that I know of.
       delete attrs.compilation;
     }
-    const att = attrs as Attributes;
+    const att = attrs;
     if (Type.isObject(att) && attrs.hasOwnProperty('track')) {
       const trnum = att.track;
       delete att.track;
