@@ -4,16 +4,17 @@
 // Everything is synchronous currently
 
 import { ProcUtil } from '@freik/node-utils';
-import { Attributes, ObjUtil, SimpleMetadata, Type } from '@freik/core-utils';
+import { ObjUtil, Type } from '@freik/core-utils';
 
 import type { Encoder, EncoderAsync } from './index';
+import { Attributes, SimpleMetadata } from '@freik/media-core';
 
-const makeM4aArgs = (
+function makeM4aArgs(
   wavFile: string,
   outputFilename: string,
   options?: Attributes,
   attrs?: Attributes | SimpleMetadata,
-): string[] => {
+): string[] {
   let args: string[] = ['-w', '-o', outputFilename];
   if (options) {
     args = args.concat(ObjUtil.prefixObj('-', options));
@@ -23,14 +24,14 @@ const makeM4aArgs = (
   }
   args.push(wavFile);
   return args;
-};
+}
 
-const m4a: Encoder = (wavFile, outputFilename, options, attrs) => {
+const M4a: Encoder = (wavFile, outputFilename, options, attrs) => {
   const args = makeM4aArgs(wavFile, outputFilename, options, attrs);
   return ProcUtil.spawnRes('faac', args);
 };
 
-const m4aAsync: EncoderAsync = async (
+const M4aAsync: EncoderAsync = async (
   wavFile,
   outputFilename,
   options,
@@ -64,12 +65,12 @@ const makeFfmpegArgs = (
   return args;
 };
 
-const ffmpeg: Encoder = (inputFile, outputFilename, options, attrs) => {
+const Ffmpeg: Encoder = (inputFile, outputFilename, options, attrs) => {
   const args = makeFfmpegArgs(inputFile, outputFilename, options, attrs);
   return ProcUtil.spawnRes('ffmpeg', args);
 };
 
-const ffmpegAsync: EncoderAsync = async (
+const FfmpegAsync: EncoderAsync = async (
   inputFile,
   outputFilename,
   options,
@@ -118,12 +119,12 @@ const makeFlacArgs = (
   return args;
 };
 
-const flac: Encoder = (wavFile, outputFilename, options, attrs) => {
+const Flac: Encoder = (wavFile, outputFilename, options, attrs) => {
   const args = makeFlacArgs(wavFile, outputFilename, options, attrs);
   return ProcUtil.spawnRes('flac', args);
 };
 
-const flacAsync: EncoderAsync = async (
+const FlacAsync: EncoderAsync = async (
   wavFile,
   outputFilename,
   options,
@@ -134,12 +135,12 @@ const flacAsync: EncoderAsync = async (
 };
 
 export {
-  m4a as aac,
-  m4a,
-  flac,
-  ffmpeg,
-  m4aAsync,
-  m4aAsync as aacAsync,
-  flacAsync,
-  ffmpegAsync,
+  M4a as Aac,
+  M4a,
+  Flac,
+  Ffmpeg,
+  M4aAsync,
+  M4aAsync as AacAsync,
+  FlacAsync,
+  FfmpegAsync,
 };

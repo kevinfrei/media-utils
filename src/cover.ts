@@ -1,8 +1,8 @@
+import { MimeData } from '@freik/media-core';
 import { promises as fs } from 'fs';
 import * as mm from 'music-metadata';
-import { MimeData } from '@freik/core-utils';
 
-async function acquireMetadata(pathname: string): Promise<mm.IAudioMetadata> {
+async function AcquireMetadata(pathname: string): Promise<mm.IAudioMetadata> {
   return await mm.parseFile(pathname);
 }
 
@@ -20,10 +20,10 @@ const header2mime = new Map<string, string>([
 ]);
 */
 
-export async function readFromFile(
+export async function ReadFromFile(
   audioFile: string,
 ): Promise<MimeData | void> {
-  const { common } = await acquireMetadata(audioFile);
+  const { common } = await AcquireMetadata(audioFile);
   const cover = mm.selectCover(common.picture);
   if (!cover) return;
   return {
@@ -32,11 +32,11 @@ export async function readFromFile(
   };
 }
 
-export async function toFile(
+export async function ToFile(
   audioFile: string,
   outputFileNoSuffix: string,
 ): Promise<string | void> {
-  const data = await readFromFile(audioFile);
+  const data = await ReadFromFile(audioFile);
   if (!data) return;
   const info = mime2suffix.get(data.type);
   const fileName = outputFileNoSuffix + (info ?? '');

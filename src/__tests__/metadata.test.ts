@@ -1,10 +1,11 @@
-import { ObjUtil, Attributes } from '@freik/core-utils';
+import { ObjUtil } from '@freik/core-utils';
+import { Attributes } from '@freik/media-core';
 import { Metadata } from '../index';
 const log = false ? console.log : (a: unknown) => {};
 
 it('From an mp3 file, Async', async () => {
   const filename = 'src/__tests__/01-quiet.mp3';
-  const md = await Metadata.fromFileAsync(filename);
+  const md = await Metadata.FromFileAsync(filename);
   expect(md).toEqual({
     artist: 'The Artist',
     year: '2003',
@@ -32,7 +33,7 @@ it('From an mp3 file, Async', async () => {
 
 it('From an m4a file, Async', async () => {
   const filename = 'src/__tests__/01-quiet.m4a';
-  const md = await Metadata.fromFileAsync(filename);
+  const md = await Metadata.FromFileAsync(filename);
   expect(md).toEqual({
     artist: 'The Artist',
     year: '2003',
@@ -60,7 +61,7 @@ it('From an m4a file, Async', async () => {
 
 it('From a flac file, Async', async () => {
   const filename = 'src/__tests__/01-quiet.flac';
-  const md = await Metadata.fromFileAsync(filename);
+  const md = await Metadata.FromFileAsync(filename);
   expect(md).toEqual({
     artist: 'The Artist',
     year: '2003',
@@ -88,7 +89,7 @@ it('From a flac file, Async', async () => {
 
 it('Generic path', () => {
   const filename = 'something/artist - 1983 - album/01 - title.m4a';
-  const md = Metadata.fromPath(filename);
+  const md = Metadata.FromPath(filename);
   expect(md).toEqual({
     artist: 'artist',
     year: '1983',
@@ -111,7 +112,7 @@ it('Generic path', () => {
 it('Generic path, Two Primary artists', () => {
   const filename =
     'something/artist 1 & artist 2 - 1983 - album/01 - title.m4a';
-  const md = Metadata.fromPath(filename);
+  const md = Metadata.FromPath(filename);
   expect(md).toEqual({
     artist: 'artist 1 & artist 2',
     year: '1983',
@@ -134,7 +135,7 @@ it('Generic path, Two Primary artists', () => {
 it('Generic path, Multiple Primary artists', () => {
   const filename =
     'something/artist 1, artist 2, artist 3 & artist 4 - 1983 - album/01 - title.m4a';
-  const md = Metadata.fromPath(filename);
+  const md = Metadata.FromPath(filename);
   expect(md).toEqual({
     artist: 'artist 1, artist 2, artist 3 & artist 4',
     year: '1983',
@@ -156,7 +157,7 @@ it('Generic path, Multiple Primary artists', () => {
 
 it('Generic path, no year', () => {
   const filename = 'something/artist - album/01 - title.mp3';
-  const md = Metadata.fromPath(filename);
+  const md = Metadata.FromPath(filename);
   expect(md).toEqual({
     artist: 'artist',
     album: 'album',
@@ -177,7 +178,7 @@ it('Generic path, no year', () => {
 it('Generic path, other artist', () => {
   const filename =
     'something/artist - 1983 - album/02 - title [feat- Other Artist].aac';
-  const md = Metadata.fromPath(filename);
+  const md = Metadata.FromPath(filename);
   expect(md).toEqual({
     artist: 'artist',
     year: '1983',
@@ -201,7 +202,7 @@ it('Generic path, other artist', () => {
 it('Generic path, 2 other artists', () => {
   const filename =
     'something/artist - 1983 - album/02 - title [feat- Other Artist 1 & Other Artist 2].aac';
-  const md = Metadata.fromPath(filename);
+  const md = Metadata.FromPath(filename);
   expect(md).toEqual({
     artist: 'artist',
     year: '1983',
@@ -225,7 +226,7 @@ it('Generic path, 2 other artists', () => {
 it('Generic path, multiple other artists', () => {
   const filename =
     'something/artist - 1983 - album/02 - title [feat- Other Artist 1, Other Artist 2 & Other Artist 3].aac';
-  const md = Metadata.fromPath(filename);
+  const md = Metadata.FromPath(filename);
   expect(md).toEqual({
     artist: 'artist',
     year: '1983',
@@ -249,7 +250,7 @@ it('Generic path, multiple other artists', () => {
 it('VA, other artist', () => {
   const filename =
     'something/VA - 1983 - album/02 - artist - title [with Other Artist].flac';
-  const md = Metadata.fromPath(filename);
+  const md = Metadata.FromPath(filename);
   expect(md).toEqual({
     artist: 'artist',
     year: '1983',
@@ -275,7 +276,7 @@ it('VA, other artist', () => {
 it('Soundtrack, other artist', () => {
   const filename =
     'something/Soundtrack - 2001 - album/02 - artist - title [featuring Other Artist].m4a';
-  const md = Metadata.fromPath(filename);
+  const md = Metadata.FromPath(filename);
   expect(md).toEqual({
     artist: 'artist',
     year: '2001',
@@ -301,7 +302,7 @@ it('Soundtrack, other artist', () => {
 it('variation', () => {
   const filename =
     'something/artist - 2001 - album/02 - title [live][goofy remix].m4a';
-  const md = Metadata.fromPath(filename);
+  const md = Metadata.FromPath(filename);
   expect(md).toEqual({
     artist: 'artist',
     year: '2001',
@@ -325,7 +326,7 @@ it('variation', () => {
 it('variation with additional artist', () => {
   const filename =
     'something/artist - 2001 - album/02 - title [live][goofy remix] [feat- foobar].m4a';
-  const md = Metadata.fromPath(filename);
+  const md = Metadata.FromPath(filename);
   expect(md).toEqual({
     artist: 'artist',
     year: '2001',
@@ -350,7 +351,7 @@ it('variation with additional artist', () => {
 it('variation with additional artist and spaces', () => {
   const filename =
     'something/artist - 2001 - album/02 - title  [live]  [feat- foobar]  [goofy remix] .flac';
-  const md = Metadata.fromPath(filename);
+  const md = Metadata.FromPath(filename);
   expect(md).toEqual({
     artist: 'artist',
     year: '2001',
@@ -374,12 +375,12 @@ it('variation with additional artist and spaces', () => {
 
 it('Artist Splitting', () => {
   const art1 = 'Artist #1 & Artist #2';
-  const spl1 = Metadata.splitArtistString(art1);
+  const spl1 = Metadata.SplitArtistString(art1);
   expect(spl1).toEqual(['Artist #1', 'Artist #2']);
   const art2 = 'Artist 1, Artist 2 & Artist 3';
-  const spl2 = Metadata.splitArtistString(art2);
+  const spl2 = Metadata.SplitArtistString(art2);
   expect(spl2).toEqual(['Artist 1', 'Artist 2', 'Artist 3']);
   const art3 = 'Artist 1, Artist 2';
-  const spl3 = Metadata.splitArtistString(art3);
+  const spl3 = Metadata.SplitArtistString(art3);
   expect(spl3).toEqual([art3]);
 });

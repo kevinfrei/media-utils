@@ -1,15 +1,8 @@
-import * as Decode from './decode';
-import * as Encode from './encode';
-import * as metadata from './metadata';
-import * as Cover from './cover';
-import {
-  Attributes,
-  Media as WebSafe,
-  SimpleMetadata,
-} from '@freik/core-utils';
-
-// eslint-disable-next-line @typescript-eslint/naming-convention
-const Metadata = { ...metadata, ...WebSafe };
+export * as Decode from './decode';
+export * as Encode from './encode';
+export * as Metadata from './metadata';
+export * as Covers from './cover';
+import { Attributes, SimpleMetadata } from '@freik/media-core';
 
 // A function type for decoding audio
 export type Decoder = (inputFile: string, outputFile: string) => boolean;
@@ -35,14 +28,3 @@ export type EncoderAsync = (
   options?: Attributes,
   attrs?: Attributes | SimpleMetadata,
 ) => Promise<boolean>;
-
-export {
-  Encode,
-  Encode as Encoders,
-  Decode,
-  Decode as Decoders,
-  Metadata,
-  Metadata as MD,
-  Cover,
-  Cover as Covers,
-};

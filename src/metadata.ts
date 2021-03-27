@@ -1,5 +1,7 @@
-import { FTON, FTONData, SimpleMetadata, Type } from '@freik/core-utils';
+import { FTON, FTONData, Type } from '@freik/core-utils';
+import { SimpleMetadata } from '@freik/media-core';
 import * as mm from 'music-metadata';
+export * from '@freik/media-core';
 
 export declare type MetadataResult = {
   media: { '@ref': string; track: { [key: string]: string }[] };
@@ -28,7 +30,7 @@ function checkVa(split: string[]): [string] | [string, 'ost' | 'va'] {
   return [split.join(' / ')];
 }
 
-export async function fromFileAsync(
+export async function FromFileAsync(
   pathname: string,
 ): Promise<SimpleMetadata | void> {
   const allMetadata = await RawMetadata(pathname);
