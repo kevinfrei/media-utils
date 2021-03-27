@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/naming-convention */
 // Module:
 // media/encode
 // Provides wav file to compressed audio file tools
@@ -5,10 +6,11 @@
 
 import { ProcUtil } from '@freik/node-utils';
 import { ObjUtil, Type } from '@freik/core-utils';
-
+import { Schema } from '@freik/media-core';
 import type { Encoder, EncoderAsync } from './index';
-import { Attributes, SimpleMetadata } from '@freik/media-core';
 
+type Attributes = Schema.Attributes;
+type SimpleMetadata = Schema.SimpleMetadata;
 function makeM4aArgs(
   wavFile: string,
   outputFilename: string,

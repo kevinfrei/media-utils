@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/naming-convention */
 // Module:
 // media/decode
 // Provides compressed audio to wav file tools

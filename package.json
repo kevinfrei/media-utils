@@ -23,21 +23,21 @@
   "author": "Kevin Frei (kevinfrei@hotmail.com)",
   "license": "MIT",
   "dependencies": {
-    "@freik/core-utils": "^0.13.0",
-    "@freik/media-core": "^0.1.3",
-    "@freik/node-utils": "^0.7.1",
+    "@freik/core-utils": "^0.14.0",
+    "@freik/media-core": "^0.2.0",
+    "@freik/node-utils": "^0.8.0",
     "music-metadata": "^7.8.1"
   },
   "devDependencies": {
     "@freik/build-tools": "^2.1.0",
     "@freik/ts-tooling": "^0.1.0",
-    "@typescript-eslint/eslint-plugin": "^4.17.0",
-    "eslint": "^7.22.0",
-    "husky": "^5.1.3",
+    "@typescript-eslint/eslint-plugin": "^4.19.0",
+    "eslint": "^7.23.0",
+    "husky": "^5.2.0",
     "jest": "^26.6.3",
     "pinst": "^2.1.6",
     "prettier": "^2.2.1",
-    "ts-jest": "^26.5.0",
+    "ts-jest": "^26.5.4",
     "typescript": "^4.2.3"
   },
   "jest": {

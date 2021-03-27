@@ -1,7 +1,8 @@
 import { FTON, FTONData, Type } from '@freik/core-utils';
-import { SimpleMetadata } from '@freik/media-core';
+import { Schema } from '@freik/media-core';
 import * as mm from 'music-metadata';
 export * from '@freik/media-core';
+type SimpleMetadata = Schema.SimpleMetadata;
 
 export declare type MetadataResult = {
   media: { '@ref': string; track: { [key: string]: string }[] };

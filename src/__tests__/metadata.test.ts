@@ -1,7 +1,9 @@
 import { ObjUtil } from '@freik/core-utils';
-import { Attributes } from '@freik/media-core';
+import { Schema, Media } from '@freik/media-core';
 import { Metadata } from '../index';
 const log = false ? console.log : (a: unknown) => {};
+
+type Attributes = Schema.Attributes;
 
 it('From an mp3 file, Async', async () => {
   const filename = 'src/__tests__/01-quiet.mp3';

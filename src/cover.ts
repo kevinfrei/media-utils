@@ -1,4 +1,4 @@
-import { MimeData } from '@freik/media-core';
+import { Schema } from '@freik/media-core';
 import { promises as fs } from 'fs';
 import * as mm from 'music-metadata';
 
@@ -22,7 +22,7 @@ const header2mime = new Map<string, string>([
 
 export async function ReadFromFile(
   audioFile: string,
-): Promise<MimeData | void> {
+): Promise<Schema.MimeData | void> {
   const { common } = await AcquireMetadata(audioFile);
   const cover = mm.selectCover(common.picture);
   if (!cover) return;
