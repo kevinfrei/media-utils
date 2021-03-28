@@ -1,8 +1,12 @@
 export * as Decode from './decode';
 export * as Encode from './encode';
-import * as oldMetadata from './metadata';
+import * as newMetadata from './metadata';
 export * as Covers from './cover';
-import { Media, Schema } from '@freik/media-core';
+import {
+  Metadata as oldMetadata,
+  Attributes,
+  SimpleMetadata,
+} from '@freik/media-core';
 
 // A function type for decoding audio
 export type Decoder = (inputFile: string, outputFile: string) => boolean;
@@ -17,17 +21,17 @@ export type DecoderAsync = (
 export type Encoder = (
   wavFile: string,
   outputFilename: string,
-  options?: Schema.Attributes,
-  attrs?: Schema.Attributes,
+  options?: Attributes,
+  attrs?: Attributes,
 ) => boolean;
 
 // Ditto, async
 export type EncoderAsync = (
   wavFile: string,
   outputFilename: string,
-  options?: Schema.Attributes,
-  attrs?: Schema.Attributes | Schema.SimpleMetadata,
+  options?: Attributes,
+  attrs?: Attributes | SimpleMetadata,
 ) => Promise<boolean>;
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export const Metadata = { ...oldMetadata, ...Media };
+export const Metadata = { ...newMetadata, ...oldMetadata };

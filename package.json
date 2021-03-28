@@ -24,7 +24,7 @@
   "license": "MIT",
   "dependencies": {
     "@freik/core-utils": "^0.14.0",
-    "@freik/media-core": "^0.2.0",
+    "@freik/media-core": "^0.3.0",
     "@freik/node-utils": "^0.8.0",
     "music-metadata": "^7.8.1"
   },

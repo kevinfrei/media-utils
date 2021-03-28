@@ -6,11 +6,9 @@
 
 import { ProcUtil } from '@freik/node-utils';
 import { ObjUtil, Type } from '@freik/core-utils';
-import { Schema } from '@freik/media-core';
+import { Attributes, SimpleMetadata } from '@freik/media-core';
 import type { Encoder, EncoderAsync } from './index';
 
-type Attributes = Schema.Attributes;
-type SimpleMetadata = Schema.SimpleMetadata;
 function makeM4aArgs(
   wavFile: string,
   outputFilename: string,
@@ -106,11 +104,15 @@ const makeFlacArgs = (
       // There's no compilation tag that I know of.
       delete attrs.compilation;
     }
-    const att = attrs;
-    if (Type.isObject(att) && attrs.hasOwnProperty('track')) {
+    const att: Attributes | SimpleMetadata | void = attrs;
+    if (
+      Type.isObject(att) &&
+      Type.has(att, 'track') &&
+      Type.isNumberOrString(att.track)
+    ) {
       const trnum = att.track;
       delete att.track;
-      att.tracknumber = trnum;
+      att.tracknumber = trnum.toString();
     }
     const attrArray = ObjUtil.prefixObj('--tag=', att);
     for (let i = 0; i < attrArray.length; i += 2) {
