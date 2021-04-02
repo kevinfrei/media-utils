@@ -1,6 +1,7 @@
 import { ObjUtil } from '@freik/core-utils';
 import { Attributes } from '@freik/media-core';
 import { Metadata } from '../index';
+
 const log = false ? console.log : (a: unknown) => {};
 
 it('From an mp3 file, Async', async () => {

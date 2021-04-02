@@ -1,12 +1,12 @@
+export * as Covers from './cover';
 export * as Decode from './decode';
 export * as Encode from './encode';
-import * as newMetadata from './metadata';
-export * as Covers from './cover';
 import {
-  Metadata as oldMetadata,
   Attributes,
+  Metadata as oldMetadata,
   SimpleMetadata,
 } from '@freik/media-core';
+import * as newMetadata from './metadata';
 
 // A function type for decoding audio
 export type Decoder = (inputFile: string, outputFile: string) => boolean;

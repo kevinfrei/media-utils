@@ -1,6 +1,5 @@
 import ofs from 'fs';
 import 'jest-extended';
-
 import { Encode } from '../index';
 
 const fs = {

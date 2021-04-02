@@ -4,9 +4,9 @@
 // Provides wav file to compressed audio file tools
 // Everything is synchronous currently
 
-import { ProcUtil } from '@freik/node-utils';
 import { ObjUtil, Type } from '@freik/core-utils';
 import { Attributes, SimpleMetadata } from '@freik/media-core';
+import { ProcUtil } from '@freik/node-utils';
 import type { Encoder, EncoderAsync } from './index';
 
 function makeM4aArgs(

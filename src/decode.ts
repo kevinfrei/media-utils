@@ -4,9 +4,8 @@
 // Provides compressed audio to wav file tools
 // Everything is synchronous currently
 
+import { PathUtil, ProcUtil } from '@freik/node-utils';
 import path from 'path';
-import { ProcUtil, PathUtil } from '@freik/node-utils';
-
 import type { Decoder, DecoderAsync } from './index';
 
 const Mp3: Decoder = (inputFile, outputFile) =>

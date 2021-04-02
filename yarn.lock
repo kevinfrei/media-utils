@@ -482,19 +482,19 @@
   dependencies:
     "@freik/core-utils" "^0.16.0"
 
+"@freik/node-utils@^0.10.0":
+  version "0.10.0"
+  resolved "https://registry.yarnpkg.com/@freik/node-utils/-/node-utils-0.10.0.tgz#7b61b8f5c8d118820269010beaf38907da856e97"
+  integrity sha512-NmE3w/1doSfwCWUIEAPiF4Vdh0VOGS7QBS3vuiRZAQzfmsmC+KUxReS/u2UCbHafnI+gK4XaOavM5/2pF1KWfw==
+  dependencies:
+    "@freik/core-utils" "^0.16.0"
+
 "@freik/node-utils@^0.6.0":
   version "0.6.0"
   resolved "https://registry.yarnpkg.com/@freik/node-utils/-/node-utils-0.6.0.tgz#61685757393c1376a7d31e007d6168ceb6bf498d"
   integrity sha512-3HghUBzrpCslzx/8dBfthNqtJ/v/WDdnY4/J4v3pV6gWmSDHYEgoTkDRJpK31inQITrDktFjoM/XkQ+v14UbFQ==
   dependencies:
     "@freik/core-utils" "^0.10.0"
-
-"@freik/node-utils@^0.9.2":
-  version "0.9.2"
-  resolved "https://registry.yarnpkg.com/@freik/node-utils/-/node-utils-0.9.2.tgz#8245fd7321e0db5dddb10e5a3dbfa834c729e30b"
-  integrity sha512-FQ8SVtgdbSV1Q1qHAqfliz279/lCPvv961s33gcp3OviefmzzZ8nfm8Pvssr3fP+Br3tgglUuu70yHcVgvf78A==
-  dependencies:
-    "@freik/core-utils" "^0.16.0"
 
 "@freik/ts-tooling@^0.1.0":
   version "0.1.0"
