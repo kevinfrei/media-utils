@@ -1,6 +1,6 @@
 {
   "name": "@freik/media-utils",
-  "version": "0.10.1",
+  "version": "0.10.2",
   "description": "Utilities for dealing with media files",
   "main": "./lib/index.js",
   "types": "./lib/index.d.ts",
@@ -26,13 +26,13 @@
   "dependencies": {
     "@freik/core-utils": "^0.16.0",
     "@freik/media-core": "^0.3.1",
-    "@freik/node-utils": "^0.10.0",
-    "music-metadata": "^7.8.1"
+    "@freik/node-utils": "^0.11.0",
+    "music-metadata": "^7.8.3"
   },
   "devDependencies": {
     "@freik/build-tools": "^2.1.0",
     "@freik/ts-tooling": "^0.1.0",
-    "@typescript-eslint/eslint-plugin": "^4.20.0",
+    "@typescript-eslint/eslint-plugin": "^4.21.0",
     "eslint": "^7.23.0",
     "husky": "^6.0.0",
     "jest": "^26.6.3",
