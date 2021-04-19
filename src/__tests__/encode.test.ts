@@ -32,7 +32,7 @@ test('Simple wav to aac (using ffmpeg)', () => {
   const enc = Encode.Ffmpeg('src/__tests__/01-quiet.wav', 'output.aac');
   expect(enc).toBe(true);
   const stat = fs.statSync('output.aac');
-  expect(stat.size).toBe(4455); // Not great, but it works for now
+  expect(stat.size).toBe(4456); // Not great, but it works for now
   log(enc);
 });
 test('Simple wav to flac', () => {
@@ -57,7 +57,7 @@ test('Async wav to aac (using ffmpeg)', async () => {
   );
   expect(enc).toBe(true);
   const stat = await fs.statAsync('output.aac');
-  expect(stat.size).toBe(4455); // Not great, but it works for now
+  expect(stat.size).toBe(4456); // Not great, but it works for now
   log(enc);
 });
 test('Async wav to flac', async () => {
