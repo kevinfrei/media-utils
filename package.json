@@ -24,10 +24,10 @@
   "author": "Kevin Frei (kevinfrei@hotmail.com)",
   "license": "MIT",
   "dependencies": {
-    "@freik/core-utils": "^0.16.0",
-    "@freik/media-core": "^0.4.0",
-    "@freik/node-utils": "^0.11.1",
-    "music-metadata": "^7.8.3"
+    "@freik/core-utils": "^0.17.0",
+    "@freik/media-core": "^0.4.1",
+    "@freik/node-utils": "^0.13.0",
+    "music-metadata": "^7.8.4"
   },
   "devDependencies": {
     "@freik/build-tools": "^2.1.0",
