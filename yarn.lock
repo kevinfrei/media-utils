@@ -461,24 +461,24 @@
     typescript "^4.2.4"
     wait-on "^5.3.0"
 
-"@freik/core-utils@^0.22.0":
-  version "0.22.0"
-  resolved "https://registry.yarnpkg.com/@freik/core-utils/-/core-utils-0.22.0.tgz#9c478356c332e4ba369fcfd97f039ff7df8a4983"
-  integrity sha512-D1WBIZKu0UyyGmAuaSH6pI/bU85B2LeUnYWD9fef0XFFMZBQX8x7tNhlWJtn+Cx+iXFHwlHtJ1l3bbDfyiB28g==
+"@freik/core-utils@^0.22.1":
+  version "0.22.1"
+  resolved "https://registry.yarnpkg.com/@freik/core-utils/-/core-utils-0.22.1.tgz#f17792e66fa87da22c8dccffa3986d77dbf76e39"
+  integrity sha512-3NoJDSIekzqkszIc4I6yR7H6MuuFh17o0sX8DcJUn4fJHvre913FIJpGqVkr8+mE9fJA3BW7cQkHgPGpDUW0Rw==
 
-"@freik/media-core@^0.4.5":
-  version "0.4.5"
-  resolved "https://registry.yarnpkg.com/@freik/media-core/-/media-core-0.4.5.tgz#9cf49596fc523080849b245e7803374521fc1e1b"
-  integrity sha512-BAdN0Lbue4DunFHWStNDxyEn/RFjJydpUySw2elUDDeJKgeQdVUDkFTt41107OOwPm3GXAeLSEOH/ksRHrAdmQ==
+"@freik/media-core@^0.4.6":
+  version "0.4.6"
+  resolved "https://registry.yarnpkg.com/@freik/media-core/-/media-core-0.4.6.tgz#7be0f65e1357068ec759b82764e9c10d303ac162"
+  integrity sha512-fnt2oq9mhfV7A2bVEM3pCobDj296iIV2PpM8Ne1kpQ4DVgCHUGEqcWcLVguRQS1cm3V94U7QTkbD15ZRbWLj9A==
   dependencies:
-    "@freik/core-utils" "^0.22.0"
+    "@freik/core-utils" "^0.22.1"
 
-"@freik/node-utils@^0.14.2":
-  version "0.14.2"
-  resolved "https://registry.yarnpkg.com/@freik/node-utils/-/node-utils-0.14.2.tgz#25d2a518504bf832ef543f1e6bc8fa2b59f8c1c3"
-  integrity sha512-fF5HxbLDREq1p6VytKpz229E1XinCDOglYoELmOYefrYLxz6iv35iNT0B4gzfon52JoyY4NXhLZdptPwQMigCA==
+"@freik/node-utils@^0.14.4":
+  version "0.14.4"
+  resolved "https://registry.yarnpkg.com/@freik/node-utils/-/node-utils-0.14.4.tgz#a4a3c42c6b214f859f86259b875b4fdeb6dee785"
+  integrity sha512-4pg71XBl+q6QAO0chquk2eGwu5IGCnJsOwn+69VvuOXM2KO7UFNx650eO/mCDvnT2EA7TBWX7TpUmacpyl6Eag==
   dependencies:
-    "@freik/core-utils" "^0.22.0"
+    "@freik/core-utils" "^0.22.1"
 
 "@freik/ts-tooling@^0.1.0":
   version "0.1.0"

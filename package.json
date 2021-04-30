@@ -24,9 +24,9 @@
   "author": "Kevin Frei (kevinfrei@hotmail.com)",
   "license": "MIT",
   "dependencies": {
-    "@freik/core-utils": "^0.22.0",
-    "@freik/media-core": "^0.4.5",
-    "@freik/node-utils": "^0.14.2",
+    "@freik/core-utils": "^0.22.1",
+    "@freik/media-core": "^0.4.6",
+    "@freik/node-utils": "^0.14.4",
     "music-metadata": "^7.8.5"
   },
   "devDependencies": {
