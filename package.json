@@ -26,7 +26,7 @@
   "dependencies": {
     "@freik/core-utils": "^0.23.2",
     "@freik/media-core": "^0.4.6",
-    "@freik/node-utils": "^0.14.4",
+    "@freik/node-utils": "^0.14.5",
     "music-metadata": "^7.8.5"
   },
   "devDependencies": {

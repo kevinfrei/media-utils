@@ -462,12 +462,12 @@
   dependencies:
     "@freik/core-utils" "^0.22.1"
 
-"@freik/node-utils@^0.14.4":
-  version "0.14.4"
-  resolved "https://registry.yarnpkg.com/@freik/node-utils/-/node-utils-0.14.4.tgz#a4a3c42c6b214f859f86259b875b4fdeb6dee785"
-  integrity sha512-4pg71XBl+q6QAO0chquk2eGwu5IGCnJsOwn+69VvuOXM2KO7UFNx650eO/mCDvnT2EA7TBWX7TpUmacpyl6Eag==
+"@freik/node-utils@^0.14.5":
+  version "0.14.5"
+  resolved "https://registry.yarnpkg.com/@freik/node-utils/-/node-utils-0.14.5.tgz#df3bed99d3364342141b9e8f0c2fdb18fbb840a7"
+  integrity sha512-Id7w99PEFtWxQObTGsMirW+f2M50wHIS/cobTDd2Rw9RjI4Vaa+Qm0ZkhmxJqPrSinBH6LJN5SC5ZLtpQ92xPg==
   dependencies:
-    "@freik/core-utils" "^0.22.1"
+    "@freik/core-utils" "^0.23.2"
 
 "@freik/ts-tooling@^0.1.0":
   version "0.1.0"
