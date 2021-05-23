@@ -1,6 +1,6 @@
 {
   "name": "@freik/media-utils",
-  "version": "0.10.10",
+  "version": "0.11.00",
   "description": "Utilities for dealing with media files",
   "main": "./lib/index.js",
   "types": "./lib/index.d.ts",
@@ -24,16 +24,16 @@
   "author": "Kevin Frei (kevinfrei@hotmail.com)",
   "license": "MIT",
   "dependencies": {
-    "@freik/core-utils": "^0.23.2",
-    "@freik/media-core": "^0.4.6",
-    "@freik/node-utils": "^0.14.5",
+    "@freik/core-utils": "^0.24.0",
+    "@freik/media-core": "^0.5.1",
+    "@freik/node-utils": "^0.14.6",
     "music-metadata": "^7.8.5"
   },
   "devDependencies": {
     "@freik/build-tools": "^2.7.2",
     "@freik/ts-tooling": "^0.1.0",
-    "@typescript-eslint/eslint-plugin": "^4.23.0",
-    "eslint": "^7.26.0",
+    "@typescript-eslint/eslint-plugin": "^4.24.0",
+    "eslint": "^7.27.0",
     "husky": "^6.0.0",
     "jest": "^26.6.3",
     "pinst": "^2.1.6",
