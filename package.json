@@ -25,21 +25,21 @@
   "license": "MIT",
   "dependencies": {
     "@freik/core-utils": "^0.24.0",
-    "@freik/media-core": "^0.5.1",
+    "@freik/media-core": "^0.6.0",
     "@freik/node-utils": "^0.14.6",
     "music-metadata": "^7.8.5"
   },
   "devDependencies": {
     "@freik/build-tools": "^2.7.2",
     "@freik/ts-tooling": "^0.1.0",
-    "@typescript-eslint/eslint-plugin": "^4.24.0",
+    "@typescript-eslint/eslint-plugin": "^4.26.0",
     "eslint": "^7.27.0",
     "husky": "^6.0.0",
     "jest": "^26.6.3",
     "pinst": "^2.1.6",
     "prettier": "^2.3.0",
     "ts-jest": "^26.5.6",
-    "typescript": "^4.2.4"
+    "typescript": "^4.3.2"
   },
   "jest": {
     "setupFilesAfterEnv": [
