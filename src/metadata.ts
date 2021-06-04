@@ -51,17 +51,13 @@ export async function FromFileAsync(
     return;
   }
   const title = metadata.title.trim();
-  const track = metadata.track.no.toString();
+  const track = metadata.track.no.toString().trim();
   const album = metadata.album.trim();
   let artist = metadata.artist.trim();
   // TODO: This isn't configured for the new metadata module I've switched to
   let albumPerformer = Type.hasStr(metadata, 'Album_Performer')
     ? metadata.Album_Performer.trim()
     : '';
-  const year =
-    Type.has(metadata, 'year') && Type.isNumber(metadata.year)
-      ? metadata.year.toString()
-      : undefined;
 
   // There's some weirdnes WRT %Performer% sometimes...
   const asplit = artist.split(' / ');
@@ -75,10 +71,21 @@ export async function FromFileAsync(
   artist = updateArtist;
   const [updateAlbumPerformer, pcomp] = checkVa(psplit);
   albumPerformer = updateAlbumPerformer;
+  const result: SimpleMetadata = {
+    artist,
+    album,
+    track,
+    title,
+  };
   const compilation = acomp ?? pcomp;
   if (compilation) {
-    return { artist, album, year, track, title, compilation };
-  } else {
-    return { artist, album, year, track, title };
+    result.compilation = compilation;
   }
+  if (Type.has(metadata, 'year') && Type.isNumber(metadata.year)) {
+    result.year = metadata.year.toString();
+  }
+  if (Type.has(metadata, 'disk') && Type.hasStr(metadata.disk, 'no')) {
+    result.discNum = metadata.disk.no.toString().trim();
+  }
+  return result;
 }
