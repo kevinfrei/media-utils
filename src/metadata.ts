@@ -12,8 +12,18 @@ async function acquireMetadata(pathname: string): Promise<mm.IAudioMetadata> {
 }
 
 export async function RawMetadata(pathname: string): Promise<FTONData> {
-  const md = await acquireMetadata(pathname);
-  return FTON.filter(md);
+  try {
+    const md = await acquireMetadata(pathname);
+    return FTON.filter(md);
+  } catch (err) {
+    if (err instanceof Error) {
+      return { error: { name: err.name, message: err.message } };
+    } else if (Type.isString(err)) {
+      return { error: err };
+    } else {
+      return { error: 'Unknown error' };
+    }
+  }
 }
 
 function checkVa(split: string[]): [string] | [string, 'ost' | 'va'] {
