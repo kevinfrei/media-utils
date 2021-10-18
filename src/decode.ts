@@ -5,8 +5,8 @@
 // Everything is synchronous currently
 
 import { PathUtil, ProcUtil } from '@freik/node-utils';
+import type { Decoder, DecoderAsync } from './index.js';
 import path from 'path';
-import type { Decoder, DecoderAsync } from './index';
 
 const Mp3: Decoder = (inputFile, outputFile) =>
   ProcUtil.spawnRes('lame', ['--quiet', '--decode', inputFile, outputFile]);

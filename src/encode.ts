@@ -7,7 +7,7 @@
 import { ObjUtil, Type } from '@freik/core-utils';
 import { Attributes, SimpleMetadata } from '@freik/media-core';
 import { ProcUtil } from '@freik/node-utils';
-import type { Encoder, EncoderAsync } from './index';
+import type { Encoder, EncoderAsync } from './index.js';
 
 function makeM4aArgs(
   wavFile: string,

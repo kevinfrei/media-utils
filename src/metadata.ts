@@ -1,14 +1,15 @@
 import { FTON, FTONData, Type } from '@freik/core-utils';
 import { SimpleMetadata } from '@freik/media-core';
-import * as mm from 'music-metadata';
+import { IAudioMetadata, parseFile } from 'music-metadata';
+
 export * from '@freik/media-core';
 
 export declare type MetadataResult = {
   media: { '@ref': string; track: { [key: string]: string }[] };
 };
 
-async function acquireMetadata(pathname: string): Promise<mm.IAudioMetadata> {
-  return await mm.parseFile(pathname, { skipCovers: true });
+async function acquireMetadata(pathname: string): Promise<IAudioMetadata> {
+  return await parseFile(pathname, { skipCovers: true });
 }
 
 export async function RawMetadata(pathname: string): Promise<FTONData> {
