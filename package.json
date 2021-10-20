@@ -1,6 +1,6 @@
 {
   "name": "@freik/media-utils",
-  "version": "0.13.0",
+  "version": "0.13.1",
   "description": "Utilities for dealing with media files",
   "main": "lib/cjs/index.js",
   "module": "lib/esm/index.js",
