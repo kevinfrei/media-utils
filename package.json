@@ -30,16 +30,17 @@
   "dependencies": {
     "@freik/core-utils": "^0.31.0",
     "@freik/media-core": "^0.10.0",
-    "@freik/node-utils": "^0.18.0",
+    "@freik/node-utils": "^0.20.1",
     "music-metadata": "^7.11.4"
   },
   "devDependencies": {
-    "@freik/build-tools": "^3.1.4",
+    "@freik/build-tools": "^3.1.6",
     "@types/jest": "^27.0.2",
-    "@typescript-eslint/eslint-plugin": "^4.26.1",
+    "@typescript-eslint/eslint-plugin": "^5.1.0",
+    "@typescript-eslint/parser": "^5.1.0",
     "eslint": "^7.32.0",
-    "husky": "^7.0.2",
-    "jest": "^27.3.0",
+    "husky": "^7.0.4",
+    "jest": "^27.3.1",
     "pinst": "^2.1.6",
     "prettier": "^2.4.1",
     "rimraf": "^3.0.2",
