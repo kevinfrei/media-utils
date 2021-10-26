@@ -1,6 +1,5 @@
 import ofs from 'fs';
 import { Encode } from '../index';
-import { within } from './decode.test';
 
 const fs = {
   statAsync: ofs.promises.stat,
@@ -9,6 +8,10 @@ const fs = {
 };
 
 const log = false ? console.log : (a: unknown) => {};
+
+function within(val: number, low: number, high: number): boolean {
+  return val >= low && val <= high;
+}
 
 const cleanup = () => {
   for (let ext of ['m4a', 'aac', 'mp3', 'flac']) {
