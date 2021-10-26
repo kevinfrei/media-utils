@@ -1,6 +1,6 @@
 import ofs from 'fs';
-import 'jest-extended';
 import { Encode } from '../index';
+import { within } from './decode.test';
 
 const fs = {
   statAsync: ofs.promises.stat,
@@ -20,12 +20,13 @@ const cleanup = () => {
 
 beforeEach(cleanup);
 afterEach(cleanup);
+jest.setTimeout(30000);
 
 test('Simple wav to m4a (using faac)', () => {
   const enc = Encode.M4a('src/__tests__/01-quiet.wav', 'output.m4a');
   expect(enc).toBe(true);
   const stat = fs.statSync('output.m4a');
-  expect(stat.size).toBeWithin(7550, 9800); // Not great, but it works for now
+  expect(within(stat.size, 7550, 9800)).toBeTruthy(); // Not great, but it works for now
   log(enc);
 });
 test('Simple wav to aac (using ffmpeg)', () => {
@@ -47,7 +48,7 @@ test('Async wav to m4a (using faac)', async () => {
   const enc = await Encode.M4aAsync('src/__tests__/01-quiet.wav', 'output.m4a');
   expect(enc).toBe(true);
   const stat = await fs.statAsync('output.m4a');
-  expect(stat.size).toBeWithin(7550, 9800); // Not great, but it works for now
+  expect(within(stat.size, 7550, 9800)).toBeTruthy(); // Not great, but it works for now
   log(enc);
 });
 test('Async wav to aac (using ffmpeg)', async () => {
