@@ -1,6 +1,6 @@
 {
   "name": "@freik/media-utils",
-  "version": "0.13.3",
+  "version": "0.13.4",
   "description": "Utilities for dealing with media files",
   "main": "lib/cjs/index.js",
   "module": "lib/esm/index.js",
@@ -12,7 +12,7 @@
     "build": "tsc --project tsconfig.cjs.json && tsc --project tsconfig.esm.json",
     "cleanbuild": "yarn clean && yarn build",
     "dbg": "yarn clean && tsc --sourceMap true --project tsconfig.cjs.json && tsc --sourceMap true --project tsconfig.esm.json",
-    "prepare": "yarn run build",
+    "prepare": "yarn run cleanbuild",
     "postinstall": "husky install",
     "prepublishOnly": "yarn test && yarn run lint && pinst --disable",
     "postpublish": "pinst --enable",
