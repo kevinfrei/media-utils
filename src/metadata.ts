@@ -1,4 +1,4 @@
-import { FTON, FTONData, Type } from '@freik/core-utils';
+import { SimpleObject, Type } from '@freik/core-utils';
 import { SimpleMetadata } from '@freik/media-core';
 import { IAudioMetadata, parseFile } from 'music-metadata';
 
@@ -12,10 +12,10 @@ async function acquireMetadata(pathname: string): Promise<IAudioMetadata> {
   return await parseFile(pathname, { skipCovers: true });
 }
 
-export async function RawMetadata(pathname: string): Promise<FTONData> {
+export async function RawMetadata(pathname: string): Promise<SimpleObject> {
   try {
     const md = await acquireMetadata(pathname);
-    return FTON.filter(md);
+    return Type.asSimpleObject(md);
   } catch (err) {
     if (err instanceof Error) {
       return { error: { name: err.name, message: err.message } };
