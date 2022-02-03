@@ -4,10 +4,21 @@
 // Provides wav file to compressed audio file tools
 // Everything is synchronous currently
 
-import { ObjUtil, Type } from '@freik/core-utils';
+import { Type } from '@freik/core-utils';
 import { Attributes, SimpleMetadata } from '@freik/media-core';
 import { ProcUtil } from '@freik/node-utils';
 import type { Encoder, EncoderAsync } from './index.js';
+
+function prefixObj(str: string, obj: { [key: string]: string }): string[] {
+  const res: string[] = [];
+  for (const elem of Object.keys(obj)) {
+    res.push(str + elem);
+    if (obj[elem] !== null) {
+      res.push(obj[elem]);
+    }
+  }
+  return res;
+}
 
 function makeM4aArgs(
   wavFile: string,
@@ -17,10 +28,10 @@ function makeM4aArgs(
 ): string[] {
   let args: string[] = ['-w', '-o', outputFilename];
   if (options) {
-    args = args.concat(ObjUtil.prefixObj('-', options));
+    args = args.concat(prefixObj('-', options));
   }
   if (attrs) {
-    args = args.concat(ObjUtil.prefixObj('--', attrs as Attributes));
+    args = args.concat(prefixObj('--', attrs as Attributes));
   }
   args.push(wavFile);
   return args;
@@ -50,7 +61,7 @@ const makeFfmpegArgs = (
   // plus '-c:a', 'aac', '-cutoff', '16000'  in some world
   let args: string[] = ['-i', inputFile, '-vn'];
   if (options) {
-    args = [...args, ...ObjUtil.prefixObj('-', options)];
+    args = [...args, ...prefixObj('-', options)];
   }
   if (attrs) {
     for (const elem in attrs) {
@@ -97,7 +108,7 @@ const makeFlacArgs = (
     outputFilename,
   ];
   if (options) {
-    args = args.concat(ObjUtil.prefixObj('-', options));
+    args = args.concat(prefixObj('-', options));
   }
   if (attrs) {
     if (Type.has(attrs, 'compilation')) {
@@ -114,7 +125,7 @@ const makeFlacArgs = (
       delete att.track;
       att.tracknumber = trnum.toString();
     }
-    const attrArray = ObjUtil.prefixObj('--tag=', att);
+    const attrArray = prefixObj('--tag=', att);
     for (let i = 0; i < attrArray.length; i += 2) {
       args.push(attrArray[i] + '=' + attrArray[i + 1]);
     }
