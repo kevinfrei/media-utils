@@ -5,6 +5,7 @@ import { IAudioMetadata, parseFile } from 'music-metadata';
 export * from '@freik/media-core';
 
 export declare type MetadataResult = {
+  // eslint-disable-next-line @typescript-eslint/naming-convention
   media: { '@ref': string; track: { [key: string]: string }[] };
 };
 

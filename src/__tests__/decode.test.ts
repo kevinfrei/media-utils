@@ -96,7 +96,7 @@ test('Async wma to wav', async () => {
   const stat = await waitForFileAsync('src/__tests__/test-output4.wav');
   expect(stat).toBeTruthy();
   if (!stat) return;
-  expect(stat.size).toBe(90190); // Not great, but it works for now
+  expect(within(stat.size, 81998, 90191)).toBeTruthy(); // Not great, but it works for now
   log(dec);
 });
 
@@ -145,12 +145,19 @@ test('Simple wma to wav', () => {
   const stat = waitForFile('src/__tests__/test-output8.wav');
   expect(stat).toBeTruthy();
   if (!stat) return;
-  expect(stat.size).toBe(90190); // Not great, but it works for now
+  expect(within(stat.size, 81998, 90190)).toBeTruthy(); // Not great, but it works for now
   log(dec);
 });
 
-const types = ['m4a', 'wma', 'mp3', 'flac'];
-for (let type of types) {
+const ranges = new Map<string, [number, number]>([
+  ['m4a', [90000, 90500]],
+  ['wma', [81500, 82500]],
+  ['mp3', [88500, 89000]],
+  ['flac', [133000, 133500]],
+]);
+for (let kvp of ranges) {
+  const type = kvp[0];
+  const range = kvp[1];
   test(`Automatic Async ${type} to wav conversion:`, async () => {
     const dec = await Decode.MakeWaveAsync(`src/__tests__/01-quiet.${type}`);
     expect(dec).toBeDefined();
@@ -159,7 +166,8 @@ for (let type of types) {
       const stat = await waitForFileAsync(dec);
       expect(stat).toBeTruthy();
       if (!stat) return;
-      expect(within(stat.size, 88000, 135000)).toBeTruthy();
+      //  console.log(`${type}: ${stat.size}`);
+      expect(within(stat.size, range[0], range[1])).toBeTruthy();
       await fs.unlinkAsync(dec);
     }
   });
@@ -170,7 +178,7 @@ for (let type of types) {
       const stat = waitForFile(dec);
       expect(stat).toBeTruthy();
       if (!stat) return;
-      expect(within(stat.size, 88000, 135000)).toBeTruthy();
+      expect(within(stat.size, range[0], range[1])).toBeTruthy();
       fs.unlinkSync(dec);
     }
   });
