@@ -1961,14 +1961,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@freik/core-utils@npm:^1.1.1":
+"@freik/core-utils@npm:>=1.1.0, @freik/core-utils@npm:^1.1.1":
   version: 1.1.1
   resolution: "@freik/core-utils@npm:1.1.1"
   checksum: 419c8fe9bc712b6ac47eb771487ac7ae65ecceeee2c3afdb633d33588da12c89c34716fb844bb767e23b6f368db98735dccc27bbdd86f6d0e752c94af355cb2e
   languageName: node
   linkType: hard
 
-"@freik/media-core@npm:^0.10.5":
+"@freik/media-core@npm:>=0.10.0":
   version: 0.10.5
   resolution: "@freik/media-core@npm:0.10.5"
   dependencies:
@@ -1982,9 +1982,9 @@ __metadata:
   resolution: "@freik/media-utils@workspace:."
   dependencies:
     "@freik/build-tools": ^3.2.2
-    "@freik/core-utils": ^1.1.1
-    "@freik/media-core": ^0.10.5
-    "@freik/node-utils": ^1.0.2
+    "@freik/core-utils": ">=1.1.0"
+    "@freik/media-core": ">=0.10.0"
+    "@freik/node-utils": ">=1.0.0"
     "@types/jest": ^27.5.1
     "@typescript-eslint/eslint-plugin": ^5.26.0
     "@typescript-eslint/parser": ^5.26.0
@@ -2002,7 +2002,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@freik/node-utils@npm:^1.0.2":
+"@freik/node-utils@npm:>=1.0.0":
   version: 1.0.2
   resolution: "@freik/node-utils@npm:1.0.2"
   dependencies:
