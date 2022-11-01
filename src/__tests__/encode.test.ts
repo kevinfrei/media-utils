@@ -43,7 +43,7 @@ test('Simple wav to flac', () => {
   const enc = Encode.Flac('src/__tests__/01-quiet.wav', 'output.flac');
   expect(enc).toBe(true);
   const stat = fs.statSync('output.flac');
-  expect(stat.size).toBe(21117); // Not great, but it works for now
+  expect(within(stat.size, 20950, 21150)).toBeTruthy(); // Not great, but it works for now
   log(enc);
 });
 
@@ -71,6 +71,6 @@ test('Async wav to flac', async () => {
   );
   expect(enc).toBe(true);
   const stat = await fs.statAsync('output.flac');
-  expect(stat.size).toBe(21117); // Not great, but it works for now
+  expect(within(stat.size, 20950, 21125)).toBeTruthy(); // Not great, but it works for now
   log(enc);
 });
