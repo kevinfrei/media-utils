@@ -23,6 +23,7 @@ export type Encoder = (
   outputFilename: string,
   options?: Attributes,
   attrs?: Attributes,
+  coverImage?: string,
 ) => boolean;
 
 // Ditto, async
@@ -31,6 +32,7 @@ export type EncoderAsync = (
   outputFilename: string,
   options?: Attributes,
   attrs?: Attributes | SimpleMetadata,
+  coverImage?: string,
 ) => Promise<boolean>;
 
 // eslint-disable-next-line @typescript-eslint/naming-convention

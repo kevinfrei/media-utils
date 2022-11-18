@@ -52,11 +52,14 @@ const M4aAsync: EncoderAsync = async (
   return await ProcUtil.spawnResAsync('faac', args);
 };
 
+// How to add cover images to the .m4a file:
+// https://stackoverflow.com/questions/17798709/ffmpeg-how-to-embed-cover-art-image-to-m4a
 const makeFfmpegArgs = (
   inputFile: string,
   outputFilename: string,
   options?: Attributes,
   attrs?: Attributes | SimpleMetadata,
+  coverImage?: string,
 ): string[] => {
   // plus '-c:a', 'aac', '-cutoff', '16000'  in some world
   let args: string[] = ['-i', inputFile, '-vn'];
@@ -76,8 +79,20 @@ const makeFfmpegArgs = (
   return args;
 };
 
-const Ffmpeg: Encoder = (inputFile, outputFilename, options, attrs) => {
-  const args = makeFfmpegArgs(inputFile, outputFilename, options, attrs);
+const Ffmpeg: Encoder = (
+  inputFile,
+  outputFilename,
+  options,
+  attrs,
+  coverImage,
+) => {
+  const args = makeFfmpegArgs(
+    inputFile,
+    outputFilename,
+    options,
+    attrs,
+    coverImage,
+  );
   return ProcUtil.spawnRes('ffmpeg', args);
 };
 
@@ -86,8 +101,15 @@ const FfmpegAsync: EncoderAsync = async (
   outputFilename,
   options,
   attrs,
+  coverImage,
 ) => {
-  const args = makeFfmpegArgs(inputFile, outputFilename, options, attrs);
+  const args = makeFfmpegArgs(
+    inputFile,
+    outputFilename,
+    options,
+    attrs,
+    coverImage,
+  );
   return await ProcUtil.spawnResAsync('ffmpeg', args);
 };
 
