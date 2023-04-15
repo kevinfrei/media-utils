@@ -1,6 +1,6 @@
 import { Type } from '@freik/core-utils';
 import { Attributes } from '@freik/media-core';
-import { Metadata } from '../index';
+import { Metadata } from '../index.js';
 
 const log = false ? console.log : (a: unknown) => {};
 

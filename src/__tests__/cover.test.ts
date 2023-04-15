@@ -1,4 +1,4 @@
-import { Covers } from '../index';
+import { Covers } from '../index.js';
 const log = false ? console.log : (a: unknown) => {};
 
 it('Read a jpeg from an mp3 file', async () => {

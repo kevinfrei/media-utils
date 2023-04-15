@@ -1,9 +1,9 @@
 import { MimeData } from '@freik/media-core';
-import { promises as fs } from 'fs';
-import * as mm from 'music-metadata';
+import { promises as fs } from 'node:fs';
+import { IAudioMetadata, parseFile, selectCover } from 'music-metadata';
 
-async function AcquireMetadata(pathname: string): Promise<mm.IAudioMetadata> {
-  return await mm.parseFile(pathname);
+async function AcquireMetadata(pathname: string): Promise<IAudioMetadata> {
+  return await parseFile(pathname);
 }
 
 const mime2suffix = new Map<string, string>([
@@ -24,7 +24,7 @@ export async function ReadFromFile(
   audioFile: string,
 ): Promise<MimeData | void> {
   const { common } = await AcquireMetadata(audioFile);
-  const cover = mm.selectCover(common.picture);
+  const cover = selectCover(common.picture);
   if (!cover) return;
   return {
     data: cover.data.toString('base64'),
