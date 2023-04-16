@@ -137,7 +137,7 @@ const makeFlacArgs = (
       // There's no compilation tag that I know of.
       delete attrs.compilation;
     }
-    const att: Attributes | SimpleMetadata | void = attrs;
+    const att: Attributes = attrs;
     if (
       Type.isObject(att) &&
       Type.has(att, 'track') &&
