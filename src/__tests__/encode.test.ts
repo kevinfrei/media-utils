@@ -1,5 +1,5 @@
-import ofs from 'fs';
-import { Encode } from '../index';
+import * as ofs from 'fs';
+import { Encode } from '../index.js';
 
 const fs = {
   statAsync: ofs.promises.stat,

@@ -6,7 +6,7 @@
 
 import { PathUtil, ProcUtil } from '@freik/node-utils';
 import type { Decoder, DecoderAsync } from './index.js';
-import path from 'path';
+import * as path from 'path';
 
 const Mp3: Decoder = (inputFile, outputFile) =>
   ProcUtil.spawnRes('lame', ['--quiet', '--decode', inputFile, outputFile]);

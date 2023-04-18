@@ -50,13 +50,6 @@
     "ts-jest": "^29.1.0",
     "typescript": "^5.0.4"
   },
-  "jest": {
-    "setupFilesAfterEnv": [
-      "jest-extended/all"
-    ]
-  },
-  "files": [
-    "lib/**/*"
-  ],
+  "files": ["lib/**/*"],
   "packageManager": "yarn@3.5.0"
 }

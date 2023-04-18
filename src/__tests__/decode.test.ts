@@ -1,6 +1,6 @@
 import { Sleep } from '@freik/core-utils';
-import ofs from 'fs';
-import { Decode } from '../index';
+import * as ofs from 'fs';
+import { Decode } from '../index.js';
 
 const fs = {
   statAsync: ofs.promises.stat,
