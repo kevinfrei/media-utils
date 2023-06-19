@@ -1,5 +1,13 @@
-import { SimpleObject, Type } from '@freik/core-utils';
 import { SimpleMetadata } from '@freik/media-core';
+import {
+  SimpleObject,
+  asSimpleObject,
+  hasField,
+  hasFieldType,
+  hasStrField,
+  isNumber,
+  isString,
+} from '@freik/typechk';
 import { IAudioMetadata, parseFile } from 'music-metadata';
 
 export * from '@freik/media-core';
@@ -16,11 +24,11 @@ async function acquireMetadata(pathname: string): Promise<IAudioMetadata> {
 export async function RawMetadata(pathname: string): Promise<SimpleObject> {
   try {
     const md = await acquireMetadata(pathname);
-    return Type.asSimpleObject(md);
+    return asSimpleObject(md);
   } catch (err) {
     if (err instanceof Error) {
       return { error: { name: err.name, message: err.message } };
-    } else if (Type.isString(err)) {
+    } else if (isString(err)) {
       return { error: err };
     } else {
       return { error: 'Unknown error' };
@@ -47,18 +55,17 @@ export async function FromFileAsync(
 ): Promise<SimpleMetadata | void> {
   const allMetadata = await RawMetadata(pathname);
   // Requirements: Album, Artist, Track, Title
-  if (!Type.has(allMetadata, 'common')) {
+  if (!hasField(allMetadata, 'common')) {
     return;
   }
   const metadata = allMetadata.common;
   if (
     !metadata ||
-    !Type.hasStr(metadata, 'title') ||
-    !Type.hasStr(metadata, 'album') ||
-    !Type.hasStr(metadata, 'artist') ||
-    !Type.has(metadata, 'track') ||
-    !Type.has(metadata.track, 'no') ||
-    !Type.isNumber(metadata.track.no)
+    !hasStrField(metadata, 'title') ||
+    !hasStrField(metadata, 'album') ||
+    !hasStrField(metadata, 'artist') ||
+    !hasField(metadata, 'track') ||
+    !hasFieldType(metadata.track, 'no', isNumber)
   ) {
     return;
   }
@@ -67,7 +74,7 @@ export async function FromFileAsync(
   const album = metadata.album.trim();
   let artist = metadata.artist.trim();
   // TODO: This isn't configured for the new metadata module I've switched to
-  let albumPerformer = Type.hasStr(metadata, 'Album_Performer')
+  let albumPerformer = hasStrField(metadata, 'Album_Performer')
     ? metadata.Album_Performer.trim()
     : '';
 
@@ -93,10 +100,10 @@ export async function FromFileAsync(
   if (compilation) {
     result.compilation = compilation;
   }
-  if (Type.has(metadata, 'year') && Type.isNumber(metadata.year)) {
+  if (hasFieldType(metadata, 'year', isNumber)) {
     result.year = metadata.year.toString();
   }
-  if (Type.has(metadata, 'disk') && Type.hasStr(metadata.disk, 'no')) {
+  if (hasField(metadata, 'disk') && hasStrField(metadata.disk, 'no')) {
     result.discNum = metadata.disk.no.toString().trim();
   }
   return result;

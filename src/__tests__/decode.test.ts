@@ -1,4 +1,4 @@
-import { Sleep } from '@freik/core-utils';
+import { Sleep } from '@freik/sync';
 import * as ofs from 'fs';
 import { Decode } from '../index.js';
 

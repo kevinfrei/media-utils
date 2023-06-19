@@ -1,6 +1,6 @@
-import { Type } from '@freik/core-utils';
 import { Attributes } from '@freik/media-core';
 import { Metadata } from '../index.js';
+import { hasField } from '@freik/typechk';
 
 const log = false ? console.log : (a: unknown) => {};
 
@@ -26,9 +26,9 @@ it('From an mp3 file, Async', async () => {
     moreArtists: ['Other Artist'],
   });
   const rmd = await Metadata.RawMetadata(filename);
-  const hasComm = Type.has(rmd, 'common');
-  const hasForm = Type.has(rmd, 'format');
-  const hasNat = Type.has(rmd, 'native');
+  const hasComm = hasField(rmd, 'common');
+  const hasForm = hasField(rmd, 'format');
+  const hasNat = hasField(rmd, 'native');
   expect(hasComm && hasForm && hasNat).toBeTruthy();
 });
 
@@ -54,9 +54,9 @@ it('From an m4a file, Async', async () => {
     moreArtists: ['Other Artist'],
   });
   const rmd = await Metadata.RawMetadata(filename);
-  const hasComm = Type.has(rmd, 'common');
-  const hasForm = Type.has(rmd, 'format');
-  const hasNat = Type.has(rmd, 'native');
+  const hasComm = hasField(rmd, 'common');
+  const hasForm = hasField(rmd, 'format');
+  const hasNat = hasField(rmd, 'native');
   expect(hasComm && hasForm && hasNat).toBeTruthy();
 });
 
@@ -82,9 +82,9 @@ it('From a flac file, Async', async () => {
     moreArtists: ['Other Artist'],
   });
   const rmd = await Metadata.RawMetadata(filename);
-  const hasComm = Type.has(rmd, 'common');
-  const hasForm = Type.has(rmd, 'format');
-  const hasNat = Type.has(rmd, 'native');
+  const hasComm = hasField(rmd, 'common');
+  const hasForm = hasField(rmd, 'format');
+  const hasNat = hasField(rmd, 'native');
   expect(hasComm && hasForm && hasNat).toBeTruthy();
 });
 

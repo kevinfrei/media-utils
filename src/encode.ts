@@ -4,9 +4,14 @@
 // Provides wav file to compressed audio file tools
 // Everything is synchronous currently
 
-import { Type } from '@freik/core-utils';
 import { Attributes, SimpleMetadata } from '@freik/media-core';
 import { ProcUtil } from '@freik/node-utils';
+import {
+  hasField,
+  hasStrField,
+  isNumberOrString,
+  isObject,
+} from '@freik/typechk';
 import type { Encoder, EncoderAsync } from './index.js';
 
 function prefixObj(str: string, obj: { [key: string]: string }): string[] {
@@ -68,7 +73,7 @@ const makeFfmpegArgs = (
   }
   if (attrs) {
     for (const elem in attrs) {
-      if (Type.hasStr(attrs, elem)) {
+      if (hasStrField(attrs, elem)) {
         const data: string = (attrs as any)[elem]; // eslint-disable-line
         args.push('-metadata');
         args.push(elem + '=' + data);
@@ -133,15 +138,15 @@ const makeFlacArgs = (
     args = args.concat(prefixObj('-', options));
   }
   if (attrs) {
-    if (Type.has(attrs, 'compilation')) {
+    if (hasField(attrs, 'compilation')) {
       // There's no compilation tag that I know of.
       delete attrs.compilation;
     }
     const att: Attributes = attrs;
     if (
-      Type.isObject(att) &&
-      Type.has(att, 'track') &&
-      Type.isNumberOrString(att.track)
+      isObject(att) &&
+      hasField(att, 'track') &&
+      isNumberOrString(att.track)
     ) {
       const trnum = att.track;
       delete att.track;
