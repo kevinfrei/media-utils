@@ -13,7 +13,7 @@
     "cleanbuild": "yarn clean && yarn build",
     "dbg": "yarn clean && tsc --sourceMap true --project tsconfig.cjs.json && tsc --sourceMap true --project tsconfig.esm.json",
     "prepare": "yarn run cleanbuild",
-    "_postinstall": "husky install",
+    "postinstall": "husky install",
     "prepublishOnly": "yarn test && yarn run lint && yarn run pinst --disable",
     "postpublish": "yarn run pinst --enable",
     "format": "ftool format",
