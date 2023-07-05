@@ -1,6 +1,6 @@
 {
   "name": "@freik/media-utils",
-  "version": "0.15.0",
+  "version": "0.16.0",
   "description": "Utilities for dealing with media files",
   "main": "lib/cjs/index.js",
   "module": "lib/esm/index.js",
@@ -51,8 +51,6 @@
     "ts-jest": "^29.1.0",
     "typescript": "^5.0.4"
   },
-  "files": [
-    "lib/**/*"
-  ],
+  "files": ["lib/**/*"],
   "packageManager": "yarn@3.6.0"
 }

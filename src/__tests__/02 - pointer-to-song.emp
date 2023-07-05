@@ -1,0 +1,8 @@
+{
+  "*": "The 'original' value is *relative*",
+  "original": "01-quiet.mp3",
+  "$": "Metadata Override stuff isn't correct (or supported) yet:",
+  "album": "Random Compilation Album",
+  "track": "23",
+  "year": "2005"
+}

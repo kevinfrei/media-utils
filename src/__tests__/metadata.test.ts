@@ -385,3 +385,31 @@ it('Artist Splitting', () => {
   const spl3 = Metadata.SplitArtistString(art3);
   expect(spl3).toEqual([art3]);
 });
+
+it('From an mp3 file, Async', async () => {
+  const filename = 'src/__tests__/02 - pointer-to-song.emp';
+  const md = await Metadata.FromFileAsync(filename);
+  expect(md).toEqual({
+    artist: 'The Artist',
+    year: '2003',
+    album: 'No Album',
+    track: '1',
+    title: 'Silence [w- Other Artist]',
+  });
+  log(md);
+  const fmd = Metadata.FullFromObj(filename, md as unknown as Attributes);
+  expect(fmd).toEqual({
+    originalPath: filename,
+    artist: 'The Artist',
+    year: 2003,
+    album: 'No Album',
+    track: 1,
+    title: 'Silence',
+    moreArtists: ['Other Artist'],
+  });
+  const rmd = await Metadata.RawMetadata(filename);
+  const hasComm = hasField(rmd, 'common');
+  const hasForm = hasField(rmd, 'format');
+  const hasNat = hasField(rmd, 'native');
+  expect(hasComm && hasForm && hasNat).toBeTruthy();
+});
